@@ -1,73 +1,66 @@
 /**
- * CIPHER CSE ASSOCIATION
- * Three.js 3D Particle Starfield, Typewriter Headline & Stack-Card Interactions
+ * CIPHER CSE ASSOCIATION // RAW EDITORIAL ENGINE
+ * Dynamic Typing Engine, Three.js 3D Background Engine,
+ * Architectural Telemetry Clock & Interface Controller
  */
 
 document.addEventListener('DOMContentLoaded', () => {
   // =========================================================================
-  // 1. DYNAMIC TYPEWRITER HEADLINE ANIMATION
+  // 1. DYNAMIC JAVASCRIPT TEXT CYCLING (TYPEWRITER)
   // =========================================================================
-  const typewriterElement = document.getElementById('typewriter');
+  const typedTextElement = document.getElementById('typed-text');
   const wordsToCycle = ['community.', 'future.', 'prompt.', 'gala.'];
-  
-  let currentWordIndex = 0;
-  let currentCharIndex = 0;
+
+  let wordIndex = 0;
+  let charIndex = 0;
   let isDeleting = false;
   let typingSpeed = 100;
 
-  function handleTypewriter() {
-    if (!typewriterElement) return;
+  function cycleText() {
+    if (!typedTextElement) return;
 
-    const currentWord = wordsToCycle[currentWordIndex];
+    const currentWord = wordsToCycle[wordIndex];
 
     if (isDeleting) {
-      // Remove characters
-      typewriterElement.textContent = currentWord.substring(0, currentCharIndex - 1);
-      currentCharIndex--;
-      typingSpeed = 45;
+      typedTextElement.textContent = currentWord.substring(0, charIndex - 1);
+      charIndex--;
+      typingSpeed = 50;
     } else {
-      // Add characters
-      typewriterElement.textContent = currentWord.substring(0, currentCharIndex + 1);
-      currentCharIndex++;
+      typedTextElement.textContent = currentWord.substring(0, charIndex + 1);
+      charIndex++;
       typingSpeed = 105;
     }
 
-    // Finished typing full word
-    if (!isDeleting && currentCharIndex === currentWord.length) {
+    if (!isDeleting && charIndex === currentWord.length) {
       isDeleting = true;
-      typingSpeed = 1800; // Pause to let user read
-    } 
-    // Finished deleting full word
-    else if (isDeleting && currentCharIndex === 0) {
+      typingSpeed = 1800; // Pause on complete word
+    } else if (isDeleting && charIndex === 0) {
       isDeleting = false;
-      currentWordIndex = (currentWordIndex + 1) % wordsToCycle.length;
-      typingSpeed = 400; // Brief pause before starting next word
+      wordIndex = (wordIndex + 1) % wordsToCycle.length;
+      typingSpeed = 400; // Pause before typing next word
     }
 
-    setTimeout(handleTypewriter, typingSpeed);
+    setTimeout(cycleText, typingSpeed);
   }
 
-  // Start Typewriter
-  setTimeout(handleTypewriter, 600);
+  setTimeout(cycleText, 500);
 
   // =========================================================================
-  // 2. THREE.JS 3D INTERACTIVE PARTICLE STARFIELD
+  // 2. INTERACTIVE 3D BACKGROUND (THREE.JS PARTICLES / STARS)
   // =========================================================================
   const bgCanvas = document.getElementById('bg-canvas');
 
   if (bgCanvas && typeof THREE !== 'undefined') {
     const scene = new THREE.Scene();
 
-    // Camera setup
     const camera = new THREE.PerspectiveCamera(
       60,
       window.innerWidth / window.innerHeight,
       0.1,
       1000
     );
-    camera.position.z = 80;
+    camera.position.z = 75;
 
-    // WebGL Renderer
     const renderer = new THREE.WebGLRenderer({
       canvas: bgCanvas,
       alpha: true,
@@ -77,36 +70,37 @@ document.addEventListener('DOMContentLoaded', () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    // Particle Cloud Geometry
-    const particleCount = 1350;
+    // 1200+ Stars / Particle Point Cloud
+    const particleCount = 1300;
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
     const colors = new Float32Array(particleCount * 3);
 
-    const palette = [
-      new THREE.Color('#38bdf8'), // Electric Cyan
-      new THREE.Color('#0284c7'), // Deep Cyan
-      new THREE.Color('#c084fc'), // Cyber Purple
-      new THREE.Color('#ffffff')  // Pure Star White
+    // Color Palette: Amber (#ff6b00), Soft Gold (#f59e0b), White (#f3f4f6), Muted Gray (#888888)
+    const colorPalette = [
+      new THREE.Color('#ff6b00'),
+      new THREE.Color('#f59e0b'),
+      new THREE.Color('#f3f4f6'),
+      new THREE.Color('#888888')
     ];
 
     for (let i = 0; i < particleCount; i++) {
       const i3 = i * 3;
-      positions[i3] = (Math.random() - 0.5) * 230;
-      positions[i3 + 1] = (Math.random() - 0.5) * 170;
+      positions[i3] = (Math.random() - 0.5) * 220;
+      positions[i3 + 1] = (Math.random() - 0.5) * 160;
       positions[i3 + 2] = (Math.random() - 0.5) * 140;
 
-      const chosenColor = palette[Math.floor(Math.random() * palette.length)];
-      colors[i3] = chosenColor.r;
-      colors[i3 + 1] = chosenColor.g;
-      colors[i3 + 2] = chosenColor.b;
+      const color = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+      colors[i3] = color.r;
+      colors[i3 + 1] = color.g;
+      colors[i3 + 2] = color.b;
     }
 
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
-    // Circular particle texture generator
-    const generateRadialTexture = () => {
+    // Circular particle texture generator for smooth glowing points
+    const createParticleTexture = () => {
       const size = 64;
       const cvs = document.createElement('canvas');
       cvs.width = size;
@@ -115,9 +109,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
       gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-      gradient.addColorStop(0.25, 'rgba(255, 255, 255, 0.85)');
-      gradient.addColorStop(0.7, 'rgba(255, 255, 255, 0.1)');
-      gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      gradient.addColorStop(0.25, 'rgba(255, 107, 0, 0.85)');
+      gradient.addColorStop(0.65, 'rgba(255, 107, 0, 0.15)');
+      gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, size, size);
@@ -127,11 +121,10 @@ document.addEventListener('DOMContentLoaded', () => {
       return texture;
     };
 
-    // Material
     const material = new THREE.PointsMaterial({
-      size: 1.7,
+      size: 1.65,
       vertexColors: true,
-      map: generateRadialTexture(),
+      map: createParticleTexture(),
       transparent: true,
       opacity: 0.85,
       blending: THREE.AdditiveBlending,
@@ -141,21 +134,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const starCloud = new THREE.Points(geometry, material);
     scene.add(starCloud);
 
-    // Mouse Parallax Damping
+    // Mouse coordinate tracking & lerp inertia
     let mouseX = 0;
     let mouseY = 0;
     let targetX = 0;
     let targetY = 0;
 
-    const windowHalfX = window.innerWidth / 2;
-    const windowHalfY = window.innerHeight / 2;
+    const halfWindowX = window.innerWidth / 2;
+    const halfWindowY = window.innerHeight / 2;
 
-    window.addEventListener('mousemove', (event) => {
-      mouseX = (event.clientX - windowHalfX) * 0.0006;
-      mouseY = (event.clientY - windowHalfY) * 0.0006;
+    window.addEventListener('mousemove', (e) => {
+      mouseX = (e.clientX - halfWindowX) * 0.0007;
+      mouseY = (e.clientY - halfWindowY) * 0.0007;
     });
 
-    // Resize Handler
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
@@ -163,118 +155,95 @@ document.addEventListener('DOMContentLoaded', () => {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     });
 
-    // Animation Loop
-    let clock = new THREE.Clock();
+    // Render loop
+    const clock = new THREE.Clock();
 
-    const renderLoop = () => {
-      requestAnimationFrame(renderLoop);
+    const animate = () => {
+      requestAnimationFrame(animate);
 
-      const elapsed = clock.getElapsedTime();
+      const elapsedTime = clock.getElapsedTime();
 
-      // Smooth inertia lerping
+      // Smooth inertia damping
       targetX += (mouseX - targetX) * 0.05;
       targetY += (mouseY - targetY) * 0.05;
 
-      // Cosmic slow rotation + responsive mouse tilt
-      starCloud.rotation.y = elapsed * 0.035 + targetX * 1.6;
-      starCloud.rotation.x = Math.sin(elapsed * 0.03) * 0.08 + targetY * 1.6;
+      // Organic rotation + interactive mouse tilt
+      starCloud.rotation.y = elapsedTime * 0.03 + targetX * 1.5;
+      starCloud.rotation.x = Math.sin(elapsedTime * 0.025) * 0.08 + targetY * 1.5;
 
       renderer.render(scene, camera);
     };
 
-    renderLoop();
+    animate();
   }
 
   // =========================================================================
-  // 3. INTERACTIVE STACKED CARDS CLICK REORDER (MOBILE & DESKTOP)
+  // 3. REAL-TIME TELEMETRY CLOCK
   // =========================================================================
-  const stackCards = document.querySelectorAll('.stack-card');
-  const stackContainer = document.getElementById('stack-container');
+  const clockElement = document.getElementById('clock-display');
 
-  if (stackContainer && stackCards.length > 0) {
-    stackCards.forEach((card) => {
-      card.addEventListener('click', (e) => {
-        // Bring clicked card to the front of the stack
-        stackCards.forEach((c) => {
-          c.style.zIndex = '1';
-        });
-        card.style.zIndex = '10';
-      });
-    });
-  }
-
-  // =========================================================================
-  // 4. STICKY NAVBAR DYNAMICS
-  // =========================================================================
-  const navbar = document.getElementById('navbar');
-
-  const onScroll = () => {
-    if (window.scrollY > 30) {
-      navbar.classList.add('scrolled');
-    } else {
-      navbar.classList.remove('scrolled');
-    }
+  const updateClock = () => {
+    if (!clockElement) return;
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    clockElement.textContent = `${hours}:${minutes}:${seconds} IST`;
   };
 
-  window.addEventListener('scroll', onScroll);
-  onScroll();
+  setInterval(updateClock, 1000);
+  updateClock();
 
   // =========================================================================
-  // 5. MOBILE NAVIGATION DRAWER
+  // 4. MOBILE TABLE OF CONTENTS (TOC) DRAWER
   // =========================================================================
-  const mobileToggleBtn = document.getElementById('mobile-toggle-btn');
+  const menuTrigger = document.getElementById('menu-trigger');
   const mobileDrawer = document.getElementById('mobile-drawer');
-  const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+  const drawerLinks = document.querySelectorAll('.drawer-link');
 
-  if (mobileToggleBtn && mobileDrawer) {
-    mobileToggleBtn.addEventListener('click', () => {
+  if (menuTrigger && mobileDrawer) {
+    menuTrigger.addEventListener('click', () => {
       const isOpen = mobileDrawer.classList.contains('open');
       if (isOpen) {
         mobileDrawer.classList.remove('open');
-        mobileToggleBtn.classList.remove('active');
-        mobileToggleBtn.setAttribute('aria-expanded', 'false');
+        menuTrigger.querySelector('.trigger-label').textContent = '[TOC]';
       } else {
         mobileDrawer.classList.add('open');
-        mobileToggleBtn.classList.add('active');
-        mobileToggleBtn.setAttribute('aria-expanded', 'true');
+        menuTrigger.querySelector('.trigger-label').textContent = '[CLOSE]';
       }
     });
 
-    // Close on link click
-    mobileNavLinks.forEach((link) => {
+    drawerLinks.forEach((link) => {
       link.addEventListener('click', () => {
         mobileDrawer.classList.remove('open');
-        mobileToggleBtn.classList.remove('active');
-        mobileToggleBtn.setAttribute('aria-expanded', 'false');
+        menuTrigger.querySelector('.trigger-label').textContent = '[TOC]';
       });
     });
 
-    // Close on click outside
     document.addEventListener('click', (e) => {
-      if (!navbar.contains(e.target) && mobileDrawer.classList.contains('open')) {
+      if (!menuTrigger.contains(e.target) && !mobileDrawer.contains(e.target) && mobileDrawer.classList.contains('open')) {
         mobileDrawer.classList.remove('open');
-        mobileToggleBtn.classList.remove('active');
-        mobileToggleBtn.setAttribute('aria-expanded', 'false');
+        menuTrigger.querySelector('.trigger-label').textContent = '[TOC]';
       }
     });
   }
 
   // =========================================================================
-  // 6. SCROLL SPY - ACTIVE NAVIGATION ITEM HIGHLIGHTING
+  // 5. SCROLL-SPY ACTIVE LINK SYNCHRONIZATION
   // =========================================================================
-  const observedSections = document.querySelectorAll('section[id]');
-  const desktopNavItems = document.querySelectorAll('.nav-item');
+  const sections = document.querySelectorAll('section[id]');
+  const navAnchors = document.querySelectorAll('.nav-anchor');
 
-  const updateActiveNavLink = () => {
-    const scrollPosition = window.scrollY + 140;
+  const onScroll = () => {
+    const scrollPos = window.scrollY + 160;
 
-    observedSections.forEach((section) => {
+    sections.forEach((section) => {
       const top = section.offsetTop;
       const height = section.offsetHeight;
       const id = section.getAttribute('id');
 
-      if (scrollPosition >= top && scrollPosition < top + height) {
-        desktopNavItems.forEach((link) => {
+      if (scrollPos >= top && scrollPos < top + height) {
+        navAnchors.forEach((link) => {
           link.classList.remove('active');
           if (link.getAttribute('href') === `#${id}`) {
             link.classList.add('active');
@@ -284,5 +253,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-  window.addEventListener('scroll', updateActiveNavLink);
+  window.addEventListener('scroll', onScroll);
 });

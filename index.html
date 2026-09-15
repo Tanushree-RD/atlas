@@ -1,436 +1,554 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CIPHER | Department of CSE Student Association</title>
-  <meta name="description" content="Official portal of the Department CSE Cipher Association. Experience 3D visuals, prompt engineering competitions, branch galas, and developer showcases." />
+  <title>CIPHER // Department of Computer Science & Engineering</title>
+  <meta name="description"
+    content="Official technical association & experimental laboratory of the CSE Department. Anime, Game Engineering, Systems, and Generative AI." />
 
-  <!-- Google Fonts -->
+  <!-- Fonts: Plus Jakarta Sans + JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
 
   <!-- Three.js (r128 CDN) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-  <!-- Stylesheet -->
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
 
-  <!-- Three.js Fixed Background Canvas -->
+<body class="editorial-body">
+
+  <!-- Fixed Three.js Background Canvas -->
   <canvas id="bg-canvas"></canvas>
 
-  <!-- Ambient Vignette & Noise Filter -->
-  <div class="ambient-vignette"></div>
+  <!-- Grain / Film Noise Layer -->
+  <div class="noise-overlay" aria-hidden="true"></div>
 
-  <!-- Sticky Frosted Glass Navigation Bar -->
-  <header class="navbar-wrapper" id="navbar">
-    <nav class="navbar container">
-      <!-- Logo -->
-      <a href="#home" class="nav-brand">
-        <div class="brand-icon">
-          <span>⚡</span>
-        </div>
-        <span class="brand-title">CIPHER<span class="brand-accent">.</span></span>
-        <span class="dept-badge">DEPT CSE</span>
+  <!-- Top System Telemetry Bar -->
+  <aside class="telemetry-bar">
+    <div class="telemetry-inner container">
+      <div class="tele-item">
+        <span class="tele-indicator"></span>
+        <span class="tele-text">DEPT. OF COMPUTER SCIENCE & ENG.</span>
+      </div>
+      <div class="tele-item hide-mobile">
+        <span class="tele-label">SYSTEM:</span>
+        <span class="tele-mono">CIPHER_v2.6.0_STABLE</span>
+      </div>
+      <div class="tele-item hide-mobile">
+        <span class="tele-label">STATUS:</span>
+        <span class="tele-mono text-amber">ACTIVE_SEMESTER</span>
+      </div>
+      <div class="tele-item">
+        <span class="tele-label">LOCAL_TIME:</span>
+        <span class="tele-mono" id="clock-display">00:00:00 IST</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Navigation -->
+  <header class="masthead-wrapper" id="navbar">
+    <div class="masthead container">
+      <a href="#hero" class="masthead-brand">
+        <span class="brand-monogram">[CPH]</span>
+        <span class="brand-wordmark">CIPHER<span class="brand-period">.</span></span>
       </a>
 
-      <!-- Desktop Nav Links -->
-      <ul class="nav-menu">
-        <li><a href="#home" class="nav-item active">Home</a></li>
-        <li><a href="#events" class="nav-item">Events</a></li>
-        <li><a href="#prompt-ops" class="nav-item">Prompt Ops</a></li>
-        <li><a href="#winners" class="nav-item">Winners</a></li>
-        <li><a href="#contact" class="nav-item">Contact</a></li>
-      </ul>
+      <nav class="masthead-nav">
+        <a href="#hero" class="nav-anchor active"><span class="nav-idx">01</span>INDEX</a>
+        <a href="#dossier" class="nav-anchor"><span class="nav-idx">02</span>DOSSIER</a>
+        <a href="#lumiere" class="nav-anchor"><span class="nav-idx">03</span>LUMIÈRE</a>
+        <a href="#promptops" class="nav-anchor"><span class="nav-idx">04</span>PROMPT_OPS</a>
+        <a href="#roster" class="nav-anchor"><span class="nav-idx">05</span>ROSTER</a>
+      </nav>
 
-      <!-- CTA Action -->
-      <div class="nav-actions">
-        <a href="#contact" class="btn btn-primary nav-cta">
-          <span>Join Us</span>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
+      <div class="masthead-action">
+        <a href="#connect" class="brutal-btn-sm">
+          <span>CONNECT</span>
+          <span class="btn-cross">+</span>
         </a>
-
-        <!-- Mobile Menu Toggle Button -->
-        <button class="mobile-toggle-btn" id="mobile-toggle-btn" aria-label="Open Navigation Menu">
-          <span class="toggle-bar"></span>
-          <span class="toggle-bar"></span>
+        <button class="menu-trigger" id="menu-trigger" aria-label="Toggle Table of Contents">
+          <span class="trigger-label">[TOC]</span>
         </button>
       </div>
-    </nav>
+    </div>
 
-    <!-- Mobile Navigation Drawer -->
-    <div class="mobile-drawer" id="mobile-drawer">
-      <ul class="mobile-nav-list">
-        <li><a href="#home" class="mobile-nav-link">Home</a></li>
-        <li><a href="#events" class="mobile-nav-link">Events</a></li>
-        <li><a href="#prompt-ops" class="mobile-nav-link">Prompt Ops</a></li>
-        <li><a href="#winners" class="mobile-nav-link">Winners Showcase</a></li>
-        <li><a href="#contact" class="mobile-nav-link">Contact</a></li>
-      </ul>
-      <div class="mobile-drawer-cta">
-        <a href="#contact" class="btn btn-primary btn-block">
-          <span>Join Cipher Association</span>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
-        </a>
+    <!-- Mobile Drawer -->
+    <div class="mobile-toc-drawer" id="mobile-drawer">
+      <div class="drawer-header">
+        <span class="drawer-title">// TABLE OF CONTENTS</span>
+        <span class="drawer-sub">DEPT_CSE_ASSOCIATION</span>
       </div>
+      <ul class="drawer-list">
+        <li><a href="#hero" class="drawer-link"><span class="d-num">01.</span> THE MANIFESTO</a></li>
+        <li><a href="#dossier" class="drawer-link"><span class="d-num">02.</span> ARCHIVAL DOSSIER</a></li>
+        <li><a href="#lumiere" class="drawer-link"><span class="d-num">03.</span> LUMIÈRE – THE GALA</a></li>
+        <li><a href="#promptops" class="drawer-link"><span class="d-num">04.</span> PROMPT OPS-2K26</a></li>
+        <li><a href="#roster" class="drawer-link"><span class="d-num">05.</span> WINNERS ROSTER</a></li>
+        <li><a href="#connect" class="drawer-link"><span class="d-num">06.</span> TRANSMISSION / JOIN</a></li>
+      </ul>
     </div>
   </header>
 
   <main>
-    <!-- Hero Section -->
-    <section class="hero-section container" id="home">
-      <div class="hero-wrapper">
-        <!-- Live Pill Badge -->
-        <div class="hero-pill-badge">
-          <span class="pulse-indicator">
-            <span class="pulse-ring"></span>
-            <span class="pulse-dot"></span>
-          </span>
-          <span class="pill-title">CSE CIPHER ASSOCIATION</span>
-          <span class="pill-divider">•</span>
-          <span class="pill-status">Innovating at the Edge</span>
-        </div>
+    <!-- HERO: Asymmetric Raw Editorial Layout -->
+    <section class="hero-section container" id="hero">
 
-        <!-- Dynamic Typing Hero Headline -->
-        <h1 class="hero-headline">
-          One prompt. A whole <br />
-          <span class="typewriter-container">
-            <span class="typewriter-text" id="typewriter">community.</span>
-            <span class="typewriter-cursor">|</span>
-          </span>
-        </h1>
+      <!-- Structural coordinate watermark -->
+      <div class="hero-corner-mark top-left">+00.1</div>
+      <div class="hero-corner-mark top-right">REF:CSE-2026</div>
 
-        <!-- Subheadline -->
-        <p class="hero-subheadline">
-          Welcome to the official portal of the Department CSE Cipher Association. 
-          A collective of ambitious developers, creative visionaries, and researchers exploring anime, 
-          immersive games, technical experiments, and advanced AI prompt engineering.
-        </p>
-
-        <!-- CTA Buttons -->
-        <div class="hero-actions">
-          <a href="#events" class="btn btn-primary btn-lg">
-            <span>Explore Events</span>
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </a>
-
-          <a href="#winners" class="btn btn-secondary btn-lg">
-            <span>Prompt Ops Winners</span>
-            <span class="btn-arrow-diag">↗</span>
-          </a>
-        </div>
-
-        <!-- Live Statistics Counter -->
-        <div class="hero-stats-row">
-          <div class="stat-unit">
-            <span class="stat-value">350+</span>
-            <span class="stat-caption">CSE Innovators</span>
-          </div>
-          <div class="stat-bar-separator"></div>
-          <div class="stat-unit">
-            <span class="stat-value">2</span>
-            <span class="stat-caption">Flagship Divisions</span>
-          </div>
-          <div class="stat-bar-separator"></div>
-          <div class="stat-unit">
-            <span class="stat-value">2026</span>
-            <span class="stat-caption">Spring Edition</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Interactive Stacked-Card Section (sketch-flow inspired) -->
-    <section class="section-wrapper container" id="events">
-      <div class="section-meta-header">
-        <div class="section-tag-badge">
-          <span class="tag-sparkle">✦</span>
-          <span>INTERACTIVE SHOWCASE</span>
-        </div>
-        <h2 class="section-heading">From the community. Hover to spread.</h2>
-        <p class="section-desc">
-          Hover over the card stack below to unlock and fan out our signature milestones, galas, and technical hackathons.
-        </p>
-      </div>
-
-      <!-- Interactive Stack Container -->
-      <div class="stack-showcase-zone">
-        <div class="stack-container" id="stack-container">
-          
-          <!-- Card 1: Lumière – The Gala -->
-          <article class="stack-card card-gala" data-index="0">
-            <div class="card-glow-mesh"></div>
-            <div class="card-top-meta">
-              <span class="card-tag tag-gala">BRANCH ENTRY PROGRAMME</span>
-              <span class="card-date">29 October 2025</span>
-            </div>
-
-            <div class="card-main-content">
-              <h3 class="card-title">Lumière – The Gala</h3>
-              <div class="card-theme-chip">
-                <span class="theme-label">THEME:</span>
-                <span class="theme-value">“Where Glam Meets Glow”</span>
-              </div>
-              <p class="card-body-text">
-                Held at the prestigious <strong>Kalam Auditorium</strong>, Lumière welcomed new students into the CSE department. 
-                Dressed in regal red, gold, and obsidian black decor with illuminated neon light panels, celebrating the monumental student transition into core engineering.
-              </p>
-            </div>
-
-            <div class="card-footer-tags">
-              <span class="badge-pill">📍 Kalam Auditorium</span>
-              <span class="badge-pill">✨ Red & Gold Decor</span>
-              <span class="badge-pill">🚀 CSE Induction</span>
-            </div>
-          </article>
-
-          <!-- Card 2: PROMPT OPS-2K26 -->
-          <article class="stack-card card-promptops" data-index="1">
-            <div class="card-glow-mesh cyan-mesh"></div>
-            <div class="card-top-meta">
-              <span class="card-tag tag-prompt">HACKATHON & CHALLENGE</span>
-              <span class="card-date">March 25, 2026</span>
-            </div>
-
-            <div class="card-main-content">
-              <h3 class="card-title">PROMPT OPS-2K26</h3>
-              <div class="card-theme-chip cyan-chip">
-                <span class="theme-label">ORGANIZED BY:</span>
-                <span class="theme-value">AgentBlazer Club & Cipher</span>
-              </div>
-              <p class="card-body-text">
-                Under the strategic guidance of <strong>Ms. Nisha J Roche</strong>, <strong>Ms. Jaishma K</strong>, and HOD <strong>Dr. Melwyn D’Souza</strong>. 
-                Competitors tackled multi-turn prompt engineering, Python debugging, JSON parsing, and Gemini AI security prompt extraction.
-              </p>
-            </div>
-
-            <div class="card-footer-tags">
-              <span class="badge-pill">🤖 Gemini Prompt Injections</span>
-              <span class="badge-pill">🐍 Python Debugging</span>
-              <span class="badge-pill">🏆 Dual Tracks</span>
-            </div>
-          </article>
-
-          <!-- Card 3: Cipher Association Community -->
-          <article class="stack-card card-community" data-index="2">
-            <div class="card-glow-mesh purple-mesh"></div>
-            <div class="card-top-meta">
-              <span class="card-tag tag-community">CSE COMMUNITY</span>
-              <span class="card-date">Active Cohort</span>
-            </div>
-
-            <div class="card-main-content">
-              <h3 class="card-title">Cipher Association Hub</h3>
-              <div class="card-theme-chip purple-chip">
-                <span class="theme-label">MISSION:</span>
-                <span class="theme-value">Peer Learning & Deep Tech</span>
-              </div>
-              <p class="card-body-text">
-                Driving student-led workshops, open-source code sprints, anime & gaming jams, algorithmic bootcamps, and real-world software deployments for the Computer Science & Engineering department.
-              </p>
-            </div>
-
-            <div class="card-footer-tags">
-              <span class="badge-pill">🎮 Games & Anime Labs</span>
-              <span class="badge-pill">⚡ Open-Source Guild</span>
-              <span class="badge-pill">🧠 AI Engineering</span>
-            </div>
-          </article>
-
-        </div>
-        
-        <!-- Mobile Hint -->
-        <p class="stack-mobile-hint">Tap on any card to bring it into spotlight</p>
-      </div>
-    </section>
-
-    <!-- Mentorship & Guidance Banner -->
-    <section class="section-wrapper container" id="prompt-ops">
-      <div class="faculty-advisory-box">
-        <div class="advisory-intro">
-          <span class="mono-label">FACULTY GUIDANCE & ADVISORY</span>
-          <h3 class="advisory-title">The Mentors Behind PROMPT OPS-2K26</h3>
-          <p class="advisory-sub">Empowering students through technical leadership and research excellence in Computer Science.</p>
-        </div>
-
-        <div class="faculty-grid">
-          <div class="faculty-card">
-            <span class="faculty-role">Faculty Coordinator</span>
-            <h4 class="faculty-name">Ms. Nisha J Roche</h4>
-            <span class="faculty-dept">Department of CSE</span>
+      <div class="hero-grid">
+        <!-- Left Editorial Typography Block -->
+        <div class="hero-type-col">
+          <div class="hero-classification">
+            <span class="badge-amber">[OFFICIAL PORTAL]</span>
+            <span class="class-text">COLLEGIATE TECHNICAL GUILD &bull; SEC. CSE</span>
           </div>
 
-          <div class="faculty-card">
-            <span class="faculty-role">Faculty Coordinator</span>
-            <h4 class="faculty-name">Ms. Jaishma K</h4>
-            <span class="faculty-dept">Department of CSE</span>
-          </div>
+          <h1 class="hero-mega-title">
+            <span class="title-line">ONE PROMPT.</span>
+            <span class="title-line line-indent">A WHOLE <span class="typed-wrapper"><span id="typed-text" class="text-amber">community.</span><span class="cursor" aria-hidden="true"></span></span></span>
+          </h1>
 
-          <div class="faculty-card leadership-spotlight">
-            <span class="faculty-role">Head of Department</span>
-            <h4 class="faculty-name">Dr. Melwyn D’Souza</h4>
-            <span class="faculty-dept">HOD, Computer Science & Engineering</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Winners Leaderboard & Showcase Section -->
-    <section class="section-wrapper container" id="winners">
-      <div class="section-meta-header">
-        <div class="section-tag-badge gold-tag">
-          <span class="tag-sparkle">🏆</span>
-          <span>OFFICIAL LEADERBOARD</span>
-        </div>
-        <h2 class="section-heading">PROMPT OPS-2K26 Winners</h2>
-        <p class="section-desc">
-          Honoring the champions who conquered algorithmic challenges, image synthesis, and prompt extraction hurdles.
-        </p>
-      </div>
-
-      <div class="tracks-competition-grid">
-        <!-- Track 1 Division -->
-        <div class="track-division-card">
-          <div class="track-title-bar">
-            <div class="track-code-badge">TRACK 01</div>
-            <h3 class="track-title-text">1st Year Division</h3>
-            <p class="track-desc-text">
-              Prompt engineering, AI visual tools, and exact logo/image recreation challenges.
+          <div class="hero-body-editorial">
+            <p class="lead-statement">
+              We reject sterile defaults. <strong>Cipher</strong> is the departmental powerhouse where engineering
+              discipline collides with subculture — anime worldbuilding, real-time game architecture, unconstrained
+              computing experiments, and military-grade AI prompt engineering.
             </p>
           </div>
 
-          <div class="podium-entries-list">
-            <!-- 1st Place -->
-            <div class="podium-row rank-first">
-              <div class="rank-circle gold-circle">1ST</div>
-              <div class="winner-info">
-                <span class="winner-title-name">Chinmayee</span>
-                <span class="winner-award-desc">Top Honors • Master of Prompt Synthesis</span>
-              </div>
-              <div class="trophy-tag gold-trophy">🥇 Champion</div>
-            </div>
-
-            <!-- 2nd Place -->
-            <div class="podium-row rank-second">
-              <div class="rank-circle silver-circle">2ND</div>
-              <div class="winner-info">
-                <span class="winner-title-name">Chris Royston Monteiro</span>
-                <span class="winner-award-desc">Runner Up • Creative AI Visionary</span>
-              </div>
-              <div class="trophy-tag silver-trophy">🥈 1st Runner Up</div>
-            </div>
-
-            <!-- 3rd Place -->
-            <div class="podium-row rank-third">
-              <div class="rank-circle bronze-circle">3RD</div>
-              <div class="winner-info">
-                <span class="winner-title-name">Deeksha Ravi Moger</span>
-                <span class="winner-award-desc">Second Runner Up • Visual Precision Specialist</span>
-              </div>
-              <div class="trophy-tag bronze-trophy">🥉 2nd Runner Up</div>
-            </div>
+          <div class="hero-cta-strip">
+            <a href="#promptops" class="brutal-btn-primary">
+              <span class="btn-text">EXPLORE PROMPT OPS</span>
+              <span class="btn-icon">→</span>
+            </a>
+            <a href="#lumiere" class="brutal-btn-ghost">
+              <span class="btn-text">THE GALA ARCHIVE</span>
+              <span class="btn-mono">[29.10.25]</span>
+            </a>
           </div>
         </div>
 
-        <!-- Track 2 Division -->
-        <div class="track-division-card">
-          <div class="track-title-bar">
-            <div class="track-code-badge cyan-code-badge">TRACK 02</div>
-            <h3 class="track-title-text">2nd Year Division</h3>
-            <p class="track-desc-text">
-              JSON conversion, Python code debugging, and Gemini AI security prompt extraction.
-            </p>
-          </div>
-
-          <div class="podium-entries-list">
-            <!-- 1st Place -->
-            <div class="podium-row rank-first">
-              <div class="rank-circle gold-circle">1ST</div>
-              <div class="winner-info">
-                <span class="winner-title-name">Harimurali KS</span>
-                <span class="winner-award-desc">Top Honors • Security & Prompt Jailbreak Champion</span>
-              </div>
-              <div class="trophy-tag gold-trophy">🥇 Champion</div>
+        <!-- Right Industrial Specimen & Manifest Dossier -->
+        <div class="hero-specimen-col">
+          <div class="specimen-card">
+            <div class="specimen-header">
+              <span class="spec-id">SPEC_ID: CPH-8809</span>
+              <span class="spec-status"><span class="blink-dot"></span>COMPILED</span>
             </div>
 
-            <!-- 2nd Place -->
-            <div class="podium-row rank-second">
-              <div class="rank-circle silver-circle">2ND</div>
-              <div class="winner-info">
-                <span class="winner-title-name">Venus Suhani D’Lima</span>
-                <span class="winner-award-desc">Runner Up • Algorithmic Debugging Specialist</span>
-              </div>
-              <div class="trophy-tag silver-trophy">🥈 1st Runner Up</div>
+            <div class="specimen-ascii">
+              <pre><code> __________________________________
+|   DEPARTMENT OF CSE // CIPHER    |
+|   EST. ARCHIVE • SYSTEM KERNEL   |
+|==================================|
+| > DOMAIN:  AI_SYSTEMS & CREATIVE |
+| > COHORT:  300+ DEVELOPERS       |
+| > CADENCE: WEEKLY HACKROOM       |
+|__________________________________|</code></pre>
             </div>
 
-            <!-- 3rd Place -->
-            <div class="podium-row rank-third">
-              <div class="rank-circle bronze-circle">3RD</div>
-              <div class="winner-info">
-                <span class="winner-title-name">Venisha Snehal D’Souza</span>
-                <span class="winner-award-desc">Second Runner Up • JSON & LLM Logic Master</span>
+            <div class="specimen-dossier-list">
+              <div class="dossier-row">
+                <span class="dossier-key">[CORE_MISSION]</span>
+                <span class="dossier-val">Turning theory into production software & AI pipelines.</span>
               </div>
-              <div class="trophy-tag bronze-trophy">🥉 2nd Runner Up</div>
+              <div class="dossier-row">
+                <span class="dossier-key">[TECH_STACKS]</span>
+                <span class="dossier-val">PyTorch &bull; Gemini CLI &bull; Rust &bull; WebGL &bull; Python</span>
+              </div>
+              <div class="dossier-row">
+                <span class="dossier-key">[NEXT_EVENT]</span>
+                <span class="dossier-val text-amber">Spring 2026 Prompt Extraction Jam</span>
+              </div>
+            </div>
+
+            <div class="specimen-footer">
+              <span class="barcode-graphic" aria-hidden="true">||| | |||| || ||| ||||| ||| ||</span>
+              <span class="spec-hash">0x7F2A_VERIFIED</span>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Connect / Contact Section -->
-    <section class="section-wrapper container" id="contact">
-      <div class="contact-elevated-card">
-        <div class="contact-glow-orb"></div>
-        <div class="contact-inner">
-          <span class="mono-label">JOIN CIPHER ASSOCIATION</span>
-          <h2 class="contact-headline">Ready to shape what's next?</h2>
-          <p class="contact-sub">
-            Whether you build games, craft prompts, or compile low-level kernels, 
-            Cipher is your springboard in the Department of Computer Science & Engineering.
+    <!-- HORIZONTAL TICKER BAR -->
+    <div class="editorial-marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING</span>
+        <span class="mq-div">&bull;</span>
+        <span>CIPHER ASSOCIATION</span>
+        <span class="mq-div">&bull;</span>
+        <span>PROMPT OPS-2K26</span>
+        <span class="mq-div">&bull;</span>
+        <span>LUMIÈRE THE GALA</span>
+        <span class="mq-div">&bull;</span>
+        <span>ANIME &bull; GAMES &bull; GENERATIVE AI &bull; LOW-LEVEL CODE</span>
+        <span class="mq-div">&bull;</span>
+        <span>DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING</span>
+        <span class="mq-div">&bull;</span>
+        <span>CIPHER ASSOCIATION</span>
+        <span class="mq-div">&bull;</span>
+        <span>PROMPT OPS-2K26</span>
+        <span class="mq-div">&bull;</span>
+      </div>
+    </div>
+
+    <!-- SECTION 2: LUMIÈRE – THE GALA (Editorial Feature) -->
+    <section class="editorial-section container" id="lumiere">
+      <div class="section-badge-bar">
+        <span class="sect-num">[01]</span>
+        <span class="sect-name">ARCHIVE // FLAGSHIP ENTRY PROGRAMME</span>
+        <span class="sect-coord">KALAM_AUDITORIUM</span>
+      </div>
+
+      <div class="gala-editorial-layout">
+        <!-- Left Banner Headline -->
+        <div class="gala-hero-poster">
+          <div class="poster-stamp">INDUCTION CEREMONY</div>
+          <h2 class="poster-title">
+            LUMIÈRE
+            <span class="poster-sub">— THE GALA.</span>
+          </h2>
+          <div class="poster-quote">
+            “Where Glam Meets Glow.”
+          </div>
+
+          <div class="poster-specs">
+            <div class="pspec-item">
+              <span class="pspec-label">DATE OF CONVENING</span>
+              <span class="pspec-val">29 October 2025</span>
+            </div>
+            <div class="pspec-item">
+              <span class="pspec-label">SANCTIONED VENUE</span>
+              <span class="pspec-val">Kalam Auditorium</span>
+            </div>
+            <div class="pspec-item">
+              <span class="pspec-label">ATMOSPHERE & PALETTE</span>
+              <span class="pspec-val">Crimson Red &bull; Gilded Gold &bull; Obsidian Black</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Editorial Narrative Block -->
+        <div class="gala-narrative-box">
+          <div class="archival-tag-row">
+            <span class="arch-tag">HISTORICAL RECORD</span>
+            <span class="arch-tag">CSE INDUCTION</span>
+          </div>
+
+          <h3 class="narrative-heading">
+            The formal transition of incoming engineers into the Department of Computer Science.
+          </h3>
+
+          <p class="narrative-body">
+            Staged within the acoustic geometry of <strong>Kalam Auditorium</strong>, <strong>Lumière</strong> welcomed
+            the newly inducted batch into departmental life. Moving far past standard collegiate ceremonies, the hall
+            was transformed through a deliberate triad of <strong>crimson drapery, molten gold accents, and pitch-black
+              structural framing</strong>.
           </p>
-          <div class="contact-actions">
-            <a href="mailto:cipher.cse@college.edu" class="btn btn-primary btn-lg">
-              <span>Connect with Cipher</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-              </svg>
-            </a>
-            <a href="#home" class="btn btn-secondary btn-lg">
-              <span>Back to Top</span>
-              <span>↑</span>
-            </a>
+
+          <p class="narrative-body">
+            Custom illuminated panels traced the hall's perimeter, setting a razor-sharp backdrop for technical project
+            demonstrations, student artistic showcases, and the official pledge of engineering rigor.
+          </p>
+
+          <!-- Technical Specs Ledger -->
+          <div class="brutalist-table">
+            <div class="b-row header-row">
+              <span>PARAMETER</span>
+              <span>SPECIFICATION</span>
+            </div>
+            <div class="b-row">
+              <span class="b-key">DECOR_SCHEME</span>
+              <span class="b-val">Tri-tone Crimson / Regal Gold / Deep Black</span>
+            </div>
+            <div class="b-row">
+              <span class="b-key">SCENOGRAPHY</span>
+              <span class="b-val">High-lumen illuminated light installations & neon ribbing</span>
+            </div>
+            <div class="b-row">
+              <span class="b-key">OBJECTIVE</span>
+              <span class="b-val text-amber">Departmental bonding, mentorship handshakes, cohort cohesion</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: PROMPT OPS-2K26 COMPETITION -->
+    <section class="editorial-section container" id="promptops">
+      <div class="section-badge-bar">
+        <span class="sect-num">[02]</span>
+        <span class="sect-name">CHALLENGE // AI HACKATHON & PROMPT WARFARE</span>
+        <span class="sect-coord">SEASON: 2026</span>
+      </div>
+
+      <div class="promptops-wrapper">
+        <div class="promptops-intro">
+          <div class="intro-left">
+            <span class="stamp-amber">MARCH 25, 2026</span>
+            <h2 class="promptops-title">PROMPT OPS-2K26</h2>
+            <p class="promptops-sub">
+              Jointly engineered by <strong>AgentBlazer Club</strong> and <strong>Cipher Association</strong>. An
+              adversarial AI benchmark challenging students to break safeguards, extract system prompts, and synthesize
+              code with zero tolerance for hallucination.
+            </p>
+          </div>
+
+          <!-- Faculty Advisory Dossier Box -->
+          <div class="faculty-dossier-box">
+            <div class="fd-title">[LEADERSHIP & ADVISORY ROSTER]</div>
+
+            <div class="fd-entry">
+              <div class="fd-role">HEAD OF DEPARTMENT</div>
+              <div class="fd-name">Dr. Melwyn D’Souza</div>
+              <div class="fd-dept">Head, Dept. of Computer Science & Engineering</div>
+            </div>
+
+            <div class="fd-divider"></div>
+
+            <div class="fd-entry">
+              <div class="fd-role">FACULTY CO-COORDINATOR</div>
+              <div class="fd-name">Ms. Nisha J Roche</div>
+              <div class="fd-dept">Assistant Professor, Dept. of CSE</div>
+            </div>
+
+            <div class="fd-divider"></div>
+
+            <div class="fd-entry">
+              <div class="fd-role">FACULTY CO-COORDINATOR</div>
+              <div class="fd-name">Ms. Jaishma K</div>
+              <div class="fd-dept">Assistant Professor, Dept. of CSE</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- COMPETITION ARCHITECTURE / TRACK OVERVIEW -->
+        <div class="tracks-schematic">
+          <div class="schematic-col">
+            <div class="schem-badge">TRACK_01 // 1ST YEAR CORPS</div>
+            <h3 class="schem-name">Visionary Prompt Engineering & Logo Synthesis</h3>
+            <p class="schem-desc">
+              Focuses on generative image engines, high-parameter prompt tuning, and near-pixel reconstruction of
+              complex engineering iconography and brand symbols without reference vectors.
+            </p>
+            <div class="schem-tags">
+              <span>#DiffusionModels</span>
+              <span>#NegativePrompting</span>
+              <span>#VisualSynthesis</span>
+            </div>
+          </div>
+
+          <div class="schematic-col">
+            <div class="schem-badge amber-badge">TRACK_02 // 2ND YEAR CORPS</div>
+            <h3 class="schem-name">Python Code Debugging & Gemini Jailbreak Extraction</h3>
+            <p class="schem-desc">
+              Multi-tiered problem sets: parsing messy unstructured JSON into normalized records, diagnosing syntax &
+              concurrency bugs in Python codebases, and extracting encrypted security system prompts out of Gemini AI
+              instances.
+            </p>
+            <div class="schem-tags">
+              <span>#GeminiAI</span>
+              <span>#JailbreakDefense</span>
+              <span>#JSONParsing</span>
+              <span>#Python3</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: WINNERS ROSTER (Classified Leaderboard Table) -->
+    <section class="editorial-section container" id="roster">
+      <div class="section-badge-bar">
+        <span class="sect-num">[03]</span>
+        <span class="sect-name">OFFICIAL SCOREBOARD // MERIT RECOGNITION</span>
+        <span class="sect-coord">VERIFIED_RESULTS</span>
+      </div>
+
+      <div class="roster-editorial-grid">
+
+        <!-- Track 1 Ledger -->
+        <div class="ledger-box">
+          <div class="ledger-top">
+            <div class="lt-title">
+              <span class="text-amber">[TRACK 01 WINNERS]</span>
+              <h4>1st Year Division &bull; Prompt & Visual Engineering</h4>
+            </div>
+            <span class="lt-count">3 AWARDEES</span>
+          </div>
+
+          <div class="ledger-table">
+
+            <!-- 1st -->
+            <div class="ledger-row rank-1">
+              <div class="l-rank">[RANK 01]</div>
+              <div class="l-student">
+                <span class="l-name">Chinmayee</span>
+                <span class="l-detail">First Year &bull; Dept of CSE</span>
+              </div>
+              <div class="l-honor">
+                <span class="honor-badge gold">TOP HONORS // CHAMPION</span>
+                <span class="honor-desc">Exceptional prompt specificity & logo recreation</span>
+              </div>
+            </div>
+
+            <!-- 2nd -->
+            <div class="ledger-row rank-2">
+              <div class="l-rank">[RANK 02]</div>
+              <div class="l-student">
+                <span class="l-name">Chris Royston Monteiro</span>
+                <span class="l-detail">First Year &bull; Dept of CSE</span>
+              </div>
+              <div class="l-honor">
+                <span class="honor-badge silver">FIRST RUNNER UP</span>
+                <span class="honor-desc">High-precision generative tool composition</span>
+              </div>
+            </div>
+
+            <!-- 3rd -->
+            <div class="ledger-row rank-3">
+              <div class="l-rank">[RANK 03]</div>
+              <div class="l-student">
+                <span class="l-name">Deeksha Ravi Moger</span>
+                <span class="l-detail">First Year &bull; Dept of CSE</span>
+              </div>
+              <div class="l-honor">
+                <span class="honor-badge bronze">SECOND RUNNER UP</span>
+                <span class="honor-desc">Iterative synthesis & style fidelity</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Track 2 Ledger -->
+        <div class="ledger-box">
+          <div class="ledger-top">
+            <div class="lt-title">
+              <span class="text-amber">[TRACK 02 WINNERS]</span>
+              <h4>2nd Year Division &bull; Logic, JSON & Security Prompt Warfare</h4>
+            </div>
+            <span class="lt-count">3 AWARDEES</span>
+          </div>
+
+          <div class="ledger-table">
+
+            <!-- 1st -->
+            <div class="ledger-row rank-1">
+              <div class="l-rank">[RANK 01]</div>
+              <div class="l-student">
+                <span class="l-name">Harimurali KS</span>
+                <span class="l-detail">Second Year &bull; Dept of CSE</span>
+              </div>
+              <div class="l-honor">
+                <span class="honor-badge gold">TOP HONORS // CHAMPION</span>
+                <span class="honor-desc">Flawless Gemini system prompt extraction & script fix</span>
+              </div>
+            </div>
+
+            <!-- 2nd -->
+            <div class="ledger-row rank-2">
+              <div class="l-rank">[RANK 02]</div>
+              <div class="l-student">
+                <span class="l-name">Venus Suhani D’Lima</span>
+                <span class="l-detail">Second Year &bull; Dept of CSE</span>
+              </div>
+              <div class="l-honor">
+                <span class="honor-badge silver">FIRST RUNNER UP</span>
+                <span class="honor-desc">Algorithmic debugging velocity & JSON extraction</span>
+              </div>
+            </div>
+
+            <!-- 3rd -->
+            <div class="ledger-row rank-3">
+              <div class="l-rank">[RANK 03]</div>
+              <div class="l-student">
+                <span class="l-name">Venisha Snehal D’Souza</span>
+                <span class="l-detail">Second Year &bull; Dept of CSE</span>
+              </div>
+              <div class="l-honor">
+                <span class="honor-badge bronze">SECOND RUNNER UP</span>
+                <span class="honor-desc">Clean syntactic structure & defensive prompt triage</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 5: CONTACT & ACCESS TRANSMISSION -->
+    <section class="editorial-section container" id="connect">
+      <div class="connect-terminal">
+        <div class="term-corner tl">+INIT</div>
+        <div class="term-corner tr">SYS//DISPATCH</div>
+
+        <div class="connect-grid">
+          <div class="connect-left">
+            <span class="badge-amber">[COLLABORATION & MEMBERSHIP]</span>
+            <h2 class="connect-title">Ready to write code that matters?</h2>
+            <p class="connect-desc">
+              Cipher is not an extracurricular club. It is the technical frontline of the Department of Computer Science
+              & Engineering. Whether your focus is compiler construction, interactive graphics, or prompt engineering,
+              connect with us.
+            </p>
+          </div>
+
+          <div class="connect-right">
+            <div class="trans-dossier">
+              <div class="td-line"><span class="td-key">RECIPIENT:</span> <span
+                  class="td-val">CIPHER_CSE_LEADERSHIP</span></div>
+              <div class="td-line"><span class="td-key">OFFICIAL_MAIL:</span> <a href="mailto:cipher.cse@college.edu"
+                  class="td-link">cipher.cse@college.edu</a></div>
+              <div class="td-line"><span class="td-key">PHYSICAL_HQ:</span> <span class="td-val">Dept of CSE, Kalam Tech
+                  Complex</span></div>
+            </div>
+
+            <div class="trans-actions">
+              <a href="mailto:cipher.cse@college.edu" class="brutal-btn-primary">
+                <span>SEND TRANSMISSION</span>
+                <span>↗</span>
+              </a>
+              <a href="#hero" class="brutal-btn-ghost">
+                <span>TOP OF ARCHIVE</span>
+                <span>↑</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- Minimal Dark Footer -->
-  <footer class="footer-section">
-    <div class="container footer-grid">
-      <div class="footer-branding">
-        <span class="footer-title">⚡ CIPHER.</span>
-        <span class="footer-subtitle">Department of Computer Science & Engineering</span>
+  <!-- Industrial Minimalist Colophon / Footer -->
+  <footer class="colophon-wrapper">
+    <div class="container colophon-grid">
+      <div class="colophon-col">
+        <span class="c-title">DEPARTMENT CSE CIPHER ASSOCIATION</span>
+        <span class="c-sub">Autonomous Student Engineering Consortium &bull; Session 2025–2026</span>
       </div>
-      <div class="footer-meta">
-        <span class="footer-copyright">&copy; 2026 Department CSE Cipher Association. All rights reserved.</span>
+      <div class="colophon-col col-mid">
+        <span class="c-mono">[NON-AI TEMPLATE SPECIMEN]</span>
+        <span class="c-sub">Designed in Raw HTML / CSS Grid / Vanilla JS</span>
+      </div>
+      <div class="colophon-col col-right">
+        <span class="c-stamp">&copy; CIPHER ASSOCIATION.</span>
+        <span class="c-sub">All rights reserved &bull; Kalam Auditorium Archive</span>
       </div>
     </div>
   </footer>
 
   <script src="script.js"></script>
 </body>
+
 </html>
