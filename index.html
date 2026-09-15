@@ -3,209 +3,411 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cipher Coding Club | Crack the Code. Build the Future.</title>
+  <title>CIPHER | Department of CSE Student Association</title>
+  <meta name="description" content="Official portal of the CSE Cipher Association. Exploring AI prompt engineering, algorithms, game dev, and student leadership." />
+  
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Three.js (CDN for interactive 3D particle constellation) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- Stylesheet -->
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-  <!-- Ambient Glow Effects -->
-  <div class="glow-orb glow-top-left"></div>
-  <div class="glow-orb glow-top-right"></div>
-  <div class="grid-background"></div>
+  <!-- Three.js 3D Background Canvas -->
+  <canvas id="webgl-canvas"></canvas>
 
-  <!-- Sticky Navigation Bar -->
+  <!-- Ambient Vignette & Noise Overlay -->
+  <div class="vignette-overlay"></div>
+
+  <!-- Sticky Frosted-Glass Navigation Bar -->
   <header class="navbar-wrapper" id="navbar">
     <nav class="navbar container">
       <!-- Logo -->
       <a href="#home" class="nav-logo">
-        <div class="logo-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="16 18 22 12 16 6"></polyline>
-            <polyline points="8 6 2 12 8 18"></polyline>
-            <line x1="14" y1="4" x2="10" y2="20"></line>
-          </svg>
+        <div class="logo-badge">
+          <span class="logo-symbol">⚡</span>
         </div>
-        <span class="logo-text">CIPHER<span class="logo-accent">.DEV</span></span>
+        <span class="logo-title">CIPHER<span class="logo-dot">.</span></span>
+        <span class="dept-tag">DEPT CSE</span>
       </a>
 
       <!-- Desktop Nav Links -->
       <ul class="nav-links">
         <li><a href="#home" class="nav-link active">Home</a></li>
-        <li><a href="#about" class="nav-link">About</a></li>
         <li><a href="#events" class="nav-link">Events</a></li>
-        <li><a href="#projects" class="nav-link">Projects</a></li>
+        <li><a href="#prompt-ops" class="nav-link">Prompt Ops</a></li>
         <li><a href="#contact" class="nav-link">Contact</a></li>
       </ul>
 
-      <!-- CTA Action -->
+      <!-- CTA Action Button -->
       <div class="nav-actions">
-        <a href="#join" class="btn btn-primary nav-btn">
-          <span>Join Us</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
+        <a href="#prompt-ops" class="btn btn-glass-nav">
+          <span>Winners Showcase</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
           </svg>
         </a>
 
-        <!-- Mobile Menu Toggle Button -->
-        <button class="mobile-toggle" id="mobile-menu-btn" aria-label="Toggle navigation menu">
-          <span class="hamburger-line"></span>
-          <span class="hamburger-line"></span>
-          <span class="hamburger-line"></span>
+        <!-- Mobile Hamburger Toggle -->
+        <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle navigation menu">
+          <span class="bar"></span>
+          <span class="bar"></span>
         </button>
       </div>
     </nav>
 
     <!-- Mobile Dropdown Menu -->
-    <div class="mobile-menu" id="mobile-menu">
-      <ul class="mobile-nav-links">
-        <li><a href="#home" class="mobile-nav-link active">Home</a></li>
-        <li><a href="#about" class="mobile-nav-link">About</a></li>
-        <li><a href="#events" class="mobile-nav-link">Events</a></li>
-        <li><a href="#projects" class="mobile-nav-link">Projects</a></li>
-        <li><a href="#contact" class="mobile-nav-link">Contact</a></li>
+    <div class="mobile-drawer" id="mobile-drawer">
+      <ul class="mobile-links">
+        <li><a href="#home" class="mobile-link">Home</a></li>
+        <li><a href="#events" class="mobile-link">Events</a></li>
+        <li><a href="#prompt-ops" class="mobile-link">Prompt Ops</a></li>
+        <li><a href="#contact" class="mobile-link">Contact</a></li>
       </ul>
-      <div class="mobile-cta-wrapper">
-        <a href="#join" class="btn btn-primary btn-block">
-          <span>Join Cipher Club</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
-        </a>
-      </div>
+      <a href="#prompt-ops" class="btn btn-primary btn-block mobile-btn">View Prompt Ops Winners</a>
     </div>
   </header>
 
-  <!-- Hero Section -->
   <main>
+    <!-- Hero Section -->
     <section class="hero-section container" id="home">
-      <!-- Left Content Column -->
       <div class="hero-content">
-        <!-- Live Batch Badge -->
-        <div class="hero-badge">
-          <span class="badge-pulse">
-            <span class="pulse-ring"></span>
-            <span class="pulse-dot"></span>
-          </span>
-          <span class="badge-text">Fall 2026 Applications Now Open</span>
-          <span class="badge-arrow">→</span>
+        <!-- Live Association Badge -->
+        <div class="hero-pill">
+          <span class="pulsing-core"></span>
+          <span class="mono-badge">CSE CIPHER ASSOCIATION</span>
+          <span class="pill-sep">•</span>
+          <span class="pill-note">Igniting Tech Innovations</span>
         </div>
 
-        <!-- Main Headline -->
-        <h1 class="hero-title">
+        <!-- Hero Headline -->
+        <h1 class="hero-heading">
           Crack the Code. <br />
           <span class="gradient-text">Build the Future.</span>
         </h1>
 
         <!-- Subheadline -->
-        <p class="hero-subtitle">
-          The premier collegiate hub for passionate hackers, open-source contributors, and algorithmic thinkers. Turn raw ideas into production-grade software together.
+        <p class="hero-subtext">
+          Where anime, immersive games, bleeding-edge experiments, and advanced AI prompt engineering converge. 
+          The official vanguard of the Computer Science & Engineering department shaping tomorrow’s software architects.
         </p>
 
-        <!-- CTA Button Group -->
+        <!-- CTA Buttons -->
         <div class="hero-cta-group">
-          <a href="#join" class="btn btn-primary btn-lg">
-            <span>Get Started</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <a href="#prompt-ops" class="btn btn-primary">
+            <span>Explore Prompt Ops '26</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <line x1="5" y1="12" x2="19" y2="12"></line>
               <polyline points="12 5 19 12 12 19"></polyline>
             </svg>
           </a>
 
-          <a href="#events" class="btn btn-secondary btn-lg">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="5 3 19 12 5 21 5 3"></polygon>
-            </svg>
-            <span>Explore Events</span>
+          <a href="#events" class="btn btn-secondary">
+            <span>View Branch Gala</span>
+            <span class="arrow-diagonal">↗</span>
           </a>
         </div>
 
-        <!-- Community Proof / Stats Bar -->
-        <div class="hero-stats">
-          <div class="stat-item">
-            <span class="stat-number">500+</span>
-            <span class="stat-label">Active Coders</span>
+        <!-- Metrics Grid -->
+        <div class="hero-metrics">
+          <div class="metric-block">
+            <span class="metric-num">300+</span>
+            <span class="metric-desc">Engineers & Creators</span>
           </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <span class="stat-number">45+</span>
-            <span class="stat-label">Hackathons Won</span>
+          <div class="metric-divider"></div>
+          <div class="metric-block">
+            <span class="metric-num">100%</span>
+            <span class="metric-desc">AI & Prompt Innovation</span>
           </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <span class="stat-number">20+</span>
-            <span class="stat-label">OSS Projects</span>
+          <div class="metric-divider"></div>
+          <div class="metric-block">
+            <span class="metric-num">2026</span>
+            <span class="metric-desc">Flagship Season</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Event Section: Lumière – The Gala -->
+    <section class="section-container container" id="events">
+      <div class="section-header">
+        <div class="section-tag">
+          <span class="tag-dot"></span>
+          <span>FLAGSHIP ENTRY PROGRAMME</span>
+        </div>
+        <h2 class="section-title">Lumière – The Gala</h2>
+        <p class="section-subtitle">
+          The landmark branch entry celebration welcoming students into the Department of Computer Science & Engineering.
+        </p>
+      </div>
+
+      <div class="gala-card">
+        <div class="gala-header-glow"></div>
+        <div class="gala-grid">
+          <!-- Left Gala Info -->
+          <div class="gala-info">
+            <div class="gala-meta">
+              <span class="meta-badge date-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                29 October 2025
+              </span>
+              <span class="meta-badge venue-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                Kalam Auditorium
+              </span>
+            </div>
+
+            <div class="theme-pill">
+              <span class="theme-label">OFFICIAL THEME:</span>
+              <span class="theme-name">“Where Glam Meets Glow”</span>
+            </div>
+
+            <p class="gala-description">
+              Held in the grandeur of Kalam Auditorium, <strong>Lumière</strong> marked the auspicious transition of emerging engineering minds into the CSE department. Enveloped in an opulent palette of <strong>crimson red, radiant gold, and deep black decor</strong>, the auditorium came alive with illuminated neon stage panels, electrifying student showcases, and an induction honoring academic camaraderie.
+            </p>
+
+            <div class="gala-highlights">
+              <div class="highlight-chip">
+                <span class="chip-dot red-dot"></span>
+                <span>Crimson & Gold Royale</span>
+              </div>
+              <div class="highlight-chip">
+                <span class="chip-dot glow-dot"></span>
+                <span>Illuminated Light Panels</span>
+              </div>
+              <div class="highlight-chip">
+                <span class="chip-dot black-dot"></span>
+                <span>CSE Induction Ceremony</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Gala Visual Box -->
+          <div class="gala-visual-box">
+            <div class="glass-terminal">
+              <div class="terminal-bar">
+                <span class="win-btn close"></span>
+                <span class="win-btn min"></span>
+                <span class="win-btn max"></span>
+                <span class="terminal-title">lumiere_memory.archive</span>
+              </div>
+              <div class="terminal-code">
+                <p><span class="code-kwd">event</span> = {</p>
+                <p class="indent-1"><span class="code-prop">"title"</span>: <span class="code-str">"Lumière - The Gala"</span>,</p>
+                <p class="indent-1"><span class="code-prop">"theme"</span>: <span class="code-str">"Where Glam Meets Glow"</span>,</p>
+                <p class="indent-1"><span class="code-prop">"venue"</span>: <span class="code-str">"Kalam Auditorium"</span>,</p>
+                <p class="indent-1"><span class="code-prop">"palette"</span>: [<span class="code-accent-gold">"Gold"</span>, <span class="code-accent-red">"Crimson"</span>, <span class="code-str">"Obsidian Black"</span>],</p>
+                <p class="indent-1"><span class="code-prop">"status"</span>: <span class="code-str">"Inducted & Celebrated"</span></p>
+                <p>}</p>
+                <br />
+                <p class="code-comment">// Department CSE welcomes the future innovators.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Competition: PROMPT OPS-2K26 -->
+    <section class="section-container container" id="prompt-ops">
+      <div class="section-header">
+        <div class="section-tag green-tag">
+          <span class="tag-dot green-dot"></span>
+          <span>ANNUAL AI & HACKING CHALLENGE</span>
+        </div>
+        <h2 class="section-title">PROMPT OPS-2K26</h2>
+        <p class="section-subtitle">
+          Organized collaboratively by <strong>AgentBlazer Club</strong> and <strong>Cipher</strong> on <strong>March 25, 2026</strong>.
+        </p>
+      </div>
+
+      <!-- Faculty Leadership & Advisory Banner -->
+      <div class="leadership-banner">
+        <div class="leadership-label">
+          <span class="lead-icon">🏛️</span>
+          <span>MENTORSHIP & LEADERSHIP</span>
+        </div>
+        <div class="leadership-grid">
+          <div class="leader-card">
+            <span class="leader-role">Faculty Mentor</span>
+            <span class="leader-name">Ms. Nisha J Roche</span>
+            <span class="leader-dept">Dept. of CSE</span>
+          </div>
+          <div class="leader-card">
+            <span class="leader-role">Faculty Mentor</span>
+            <span class="leader-name">Ms. Jaishma K</span>
+            <span class="leader-dept">Dept. of CSE</span>
+          </div>
+          <div class="leader-card spotlight">
+            <span class="leader-role">Head of Department</span>
+            <span class="leader-name">Dr. Melwyn D’Souza</span>
+            <span class="leader-dept">HOD, Computer Science & Eng.</span>
           </div>
         </div>
       </div>
 
-      <!-- Right Visual Column (Interactive Terminal Card) -->
-      <div class="hero-visual">
-        <div class="code-card">
-          <!-- Terminal Window Header -->
-          <div class="terminal-header">
-            <div class="terminal-dots">
-              <span class="dot dot-red"></span>
-              <span class="dot dot-yellow"></span>
-              <span class="dot dot-green"></span>
+      <!-- Winners Showcase Grid -->
+      <div class="winners-container">
+        <div class="winners-section-title">
+          <h3>🏆 Champions & Winners Showcase</h3>
+          <p>Celebrating the elite minds who mastered multi-turn prompting, prompt injection extraction, and algorithmic debugging.</p>
+        </div>
+
+        <div class="tracks-grid">
+          <!-- Track 1 Card -->
+          <div class="track-card">
+            <div class="track-header">
+              <div class="track-badge">TRACK 01</div>
+              <h4 class="track-name">1st Year Division</h4>
+              <p class="track-domains">
+                Prompt Engineering • Generative AI Tooling • Precise Logo & Image Recreation
+              </p>
             </div>
-            <div class="terminal-tab">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="4 17 10 11 4 5"></polyline>
-                <line x1="12" y1="19" x2="20" y2="19"></line>
-              </svg>
-              <span>cipher-init.py</span>
+
+            <div class="podium-list">
+              <!-- 1st Place -->
+              <div class="podium-item first-place">
+                <div class="rank-badge gold-rank">
+                  <span>1ST</span>
+                </div>
+                <div class="winner-details">
+                  <span class="winner-name">Chinmayee</span>
+                  <span class="winner-award">Top Honors • Master of Prompt Synthesis</span>
+                </div>
+                <span class="trophy-symbol">🥇</span>
+              </div>
+
+              <!-- 2nd Place -->
+              <div class="podium-item second-place">
+                <div class="rank-badge silver-rank">
+                  <span>2ND</span>
+                </div>
+                <div class="winner-details">
+                  <span class="winner-name">Chris Royston Monteiro</span>
+                  <span class="winner-award">Runner Up • Creative AI Visionary</span>
+                </div>
+                <span class="trophy-symbol">🥈</span>
+              </div>
+
+              <!-- 3rd Place -->
+              <div class="podium-item third-place">
+                <div class="rank-badge bronze-rank">
+                  <span>3RD</span>
+                </div>
+                <div class="winner-details">
+                  <span class="winner-name">Deeksha Ravi Moger</span>
+                  <span class="winner-award">Second Runner Up • Visual Precision Expert</span>
+                </div>
+                <span class="trophy-symbol">🥉</span>
+              </div>
             </div>
-            <div class="terminal-badge">Python 3.12</div>
           </div>
 
-          <!-- Code Snippet -->
-          <div class="terminal-body">
-            <pre><code><span class="token-comment"># Welcome to Cipher Coding Club</span>
-<span class="token-keyword">from</span> dataclasses <span class="token-keyword">import</span> dataclass
+          <!-- Track 2 Card -->
+          <div class="track-card">
+            <div class="track-header">
+              <div class="track-badge purple-badge">TRACK 02</div>
+              <h4 class="track-name">2nd Year Division</h4>
+              <p class="track-domains">
+                JSON Data Extraction • Python Code Debugging • Gemini AI Security Prompt Extraction
+              </p>
+            </div>
 
-<span class="token-decorator">@dataclass</span>
-<span class="token-keyword">class</span> <span class="token-class">CipherMember</span>:
-    name: <span class="token-builtin">str</span>
-    skills: <span class="token-builtin">list</span>[<span class="token-builtin">str</span>]
-    passion: <span class="token-builtin">str</span> = <span class="token-string">"Building the impossible"</span>
+            <div class="podium-list">
+              <!-- 1st Place -->
+              <div class="podium-item first-place">
+                <div class="rank-badge gold-rank">
+                  <span>1ST</span>
+                </div>
+                <div class="winner-details">
+                  <span class="winner-name">Harimurali KS</span>
+                  <span class="winner-award">Top Honors • Security & Prompt Jailbreak Champion</span>
+                </div>
+                <span class="trophy-symbol">🥇</span>
+              </div>
 
-<span class="token-keyword">def</span> <span class="token-function">ignite_potential</span>(you):
-    community = CipherClub.<span class="token-function">connect</span>()
-    <span class="token-keyword">return</span> community.<span class="token-function">launch_career</span>(
-        track=<span class="token-string">"Fullstack | AI | Web3"</span>,
-        impact=<span class="token-string">"Maximum"</span>
-    )
+              <!-- 2nd Place -->
+              <div class="podium-item second-place">
+                <div class="rank-badge silver-rank">
+                  <span>2ND</span>
+                </div>
+                <div class="winner-details">
+                  <span class="winner-name">Venus Suhani D’Lima</span>
+                  <span class="winner-award">Runner Up • Algorithmic Debugging Specialist</span>
+                </div>
+                <span class="trophy-symbol">🥈</span>
+              </div>
 
-<span class="token-comment"># Ready to elevate your skills?</span>
-CipherClub.<span class="token-function">join</span>(status=<span class="token-string">"Accepted"</span>)</code></pre>
-          </div>
-
-          <!-- Interactive Live Output Pill -->
-          <div class="terminal-footer">
-            <div class="live-status">
-              <span class="status-indicator"></span>
-              <span>Terminal Ready &bull; Weekly Meetups Every Friday</span>
+              <!-- 3rd Place -->
+              <div class="podium-item third-place">
+                <div class="rank-badge bronze-rank">
+                  <span>3RD</span>
+                </div>
+                <div class="winner-details">
+                  <span class="winner-name">Venisha Snehal D’Souza</span>
+                  <span class="winner-award">Second Runner Up • JSON & LLM Logic Master</span>
+                </div>
+                <span class="trophy-symbol">🥉</span>
+              </div>
             </div>
           </div>
         </div>
+      </div>
+    </section>
 
-        <!-- Floating Decorative Card -->
-        <div class="floating-badge">
-          <div class="floating-icon">🚀</div>
-          <div>
-            <div class="floating-title">Next Hackathon: HackCipher '26</div>
-            <div class="floating-sub">Registration closes in 3 days</div>
+    <!-- Contact & Join Section -->
+    <section class="section-container container" id="contact">
+      <div class="contact-card">
+        <div class="contact-content">
+          <span class="mono-badge">CONNECT WITH CIPHER</span>
+          <h2 class="contact-heading">Ready to code with the best?</h2>
+          <p class="contact-subtext">
+            Join the CSE Cipher Association to partake in upcoming technical hackathons, game development jams, and AI research sprints.
+          </p>
+          <div class="contact-links">
+            <a href="mailto:cipher.cse@college.edu" class="btn btn-primary">
+              <span>Contact Department</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+            </a>
+            <a href="#home" class="btn btn-secondary">
+              <span>Back to Top</span>
+              <span>↑</span>
+            </a>
           </div>
         </div>
       </div>
     </section>
   </main>
+
+  <!-- Minimal Footer -->
+  <footer class="footer-wrapper">
+    <div class="container footer-content">
+      <div class="footer-left">
+        <span class="footer-logo">⚡ CIPHER.</span>
+        <span class="footer-desc">Department of Computer Science & Engineering</span>
+      </div>
+      <div class="footer-right">
+        <span class="footer-copy">&copy; 2026 Cipher Association. Crafted for innovators.</span>
+      </div>
+    </div>
+  </footer>
 
   <script src="script.js"></script>
 </body>
