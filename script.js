@@ -1,257 +1,101 @@
-/**
- * CIPHER CSE ASSOCIATION // RAW EDITORIAL ENGINE
- * Dynamic Typing Engine, Three.js 3D Background Engine,
- * Architectural Telemetry Clock & Interface Controller
- */
-
 document.addEventListener('DOMContentLoaded', () => {
-  // =========================================================================
-  // 1. DYNAMIC JAVASCRIPT TEXT CYCLING (TYPEWRITER)
-  // =========================================================================
-  const typedTextElement = document.getElementById('typed-text');
-  const wordsToCycle = ['community.', 'future.', 'prompt.', 'gala.'];
+  const typed = document.querySelector('#typed-text');
+  const words = ['SIGNAL', 'MOMENTUM', 'FUTURE'];
+  let word = 0;
+  let position = words[0].length;
+  let deleting = true;
 
-  let wordIndex = 0;
-  let charIndex = 0;
-  let isDeleting = false;
-  let typingSpeed = 100;
-
-  function cycleText() {
-    if (!typedTextElement) return;
-
-    const currentWord = wordsToCycle[wordIndex];
-
-    if (isDeleting) {
-      typedTextElement.textContent = currentWord.substring(0, charIndex - 1);
-      charIndex--;
-      typingSpeed = 50;
+  function typeLoop() {
+    if (!typed) return;
+    const current = words[word];
+    if (deleting) {
+      position -= 1;
+      typed.textContent = current.slice(0, position);
+      if (position === 0) {
+        deleting = false;
+        word = (word + 1) % words.length;
+        setTimeout(typeLoop, 350);
+        return;
+      }
     } else {
-      typedTextElement.textContent = currentWord.substring(0, charIndex + 1);
-      charIndex++;
-      typingSpeed = 105;
-    }
-
-    if (!isDeleting && charIndex === currentWord.length) {
-      isDeleting = true;
-      typingSpeed = 1800; // Pause on complete word
-    } else if (isDeleting && charIndex === 0) {
-      isDeleting = false;
-      wordIndex = (wordIndex + 1) % wordsToCycle.length;
-      typingSpeed = 400; // Pause before typing next word
-    }
-
-    setTimeout(cycleText, typingSpeed);
-  }
-
-  setTimeout(cycleText, 500);
-
-  // =========================================================================
-  // 2. INTERACTIVE 3D BACKGROUND (THREE.JS PARTICLES / STARS)
-  // =========================================================================
-  const bgCanvas = document.getElementById('bg-canvas');
-
-  if (bgCanvas && typeof THREE !== 'undefined') {
-    const scene = new THREE.Scene();
-
-    const camera = new THREE.PerspectiveCamera(
-      60,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
-    camera.position.z = 75;
-
-    const renderer = new THREE.WebGLRenderer({
-      canvas: bgCanvas,
-      alpha: true,
-      antialias: true,
-      powerPreference: 'high-performance'
-    });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-    // 1200+ Stars / Particle Point Cloud
-    const particleCount = 1300;
-    const geometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(particleCount * 3);
-    const colors = new Float32Array(particleCount * 3);
-
-    // Color Palette: Amber (#ff6b00), Soft Gold (#f59e0b), White (#f3f4f6), Muted Gray (#888888)
-    const colorPalette = [
-      new THREE.Color('#ff6b00'),
-      new THREE.Color('#f59e0b'),
-      new THREE.Color('#f3f4f6'),
-      new THREE.Color('#888888')
-    ];
-
-    for (let i = 0; i < particleCount; i++) {
-      const i3 = i * 3;
-      positions[i3] = (Math.random() - 0.5) * 220;
-      positions[i3 + 1] = (Math.random() - 0.5) * 160;
-      positions[i3 + 2] = (Math.random() - 0.5) * 140;
-
-      const color = colorPalette[Math.floor(Math.random() * colorPalette.length)];
-      colors[i3] = color.r;
-      colors[i3 + 1] = color.g;
-      colors[i3 + 2] = color.b;
-    }
-
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-    // Circular particle texture generator for smooth glowing points
-    const createParticleTexture = () => {
-      const size = 64;
-      const cvs = document.createElement('canvas');
-      cvs.width = size;
-      cvs.height = size;
-      const ctx = cvs.getContext('2d');
-
-      const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-      gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-      gradient.addColorStop(0.25, 'rgba(255, 107, 0, 0.85)');
-      gradient.addColorStop(0.65, 'rgba(255, 107, 0, 0.15)');
-      gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, size, size);
-
-      const texture = new THREE.CanvasTexture(cvs);
-      texture.needsUpdate = true;
-      return texture;
-    };
-
-    const material = new THREE.PointsMaterial({
-      size: 1.65,
-      vertexColors: true,
-      map: createParticleTexture(),
-      transparent: true,
-      opacity: 0.85,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false
-    });
-
-    const starCloud = new THREE.Points(geometry, material);
-    scene.add(starCloud);
-
-    // Mouse coordinate tracking & lerp inertia
-    let mouseX = 0;
-    let mouseY = 0;
-    let targetX = 0;
-    let targetY = 0;
-
-    const halfWindowX = window.innerWidth / 2;
-    const halfWindowY = window.innerHeight / 2;
-
-    window.addEventListener('mousemove', (e) => {
-      mouseX = (e.clientX - halfWindowX) * 0.0007;
-      mouseY = (e.clientY - halfWindowY) * 0.0007;
-    });
-
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    });
-
-    // Render loop
-    const clock = new THREE.Clock();
-
-    const animate = () => {
-      requestAnimationFrame(animate);
-
-      const elapsedTime = clock.getElapsedTime();
-
-      // Smooth inertia damping
-      targetX += (mouseX - targetX) * 0.05;
-      targetY += (mouseY - targetY) * 0.05;
-
-      // Organic rotation + interactive mouse tilt
-      starCloud.rotation.y = elapsedTime * 0.03 + targetX * 1.5;
-      starCloud.rotation.x = Math.sin(elapsedTime * 0.025) * 0.08 + targetY * 1.5;
-
-      renderer.render(scene, camera);
-    };
-
-    animate();
-  }
-
-  // =========================================================================
-  // 3. REAL-TIME TELEMETRY CLOCK
-  // =========================================================================
-  const clockElement = document.getElementById('clock-display');
-
-  const updateClock = () => {
-    if (!clockElement) return;
-    const now = new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-    clockElement.textContent = `${hours}:${minutes}:${seconds} IST`;
-  };
-
-  setInterval(updateClock, 1000);
-  updateClock();
-
-  // =========================================================================
-  // 4. MOBILE TABLE OF CONTENTS (TOC) DRAWER
-  // =========================================================================
-  const menuTrigger = document.getElementById('menu-trigger');
-  const mobileDrawer = document.getElementById('mobile-drawer');
-  const drawerLinks = document.querySelectorAll('.drawer-link');
-
-  if (menuTrigger && mobileDrawer) {
-    menuTrigger.addEventListener('click', () => {
-      const isOpen = mobileDrawer.classList.contains('open');
-      if (isOpen) {
-        mobileDrawer.classList.remove('open');
-        menuTrigger.querySelector('.trigger-label').textContent = '[TOC]';
-      } else {
-        mobileDrawer.classList.add('open');
-        menuTrigger.querySelector('.trigger-label').textContent = '[CLOSE]';
+      const next = words[word];
+      position += 1;
+      typed.textContent = next.slice(0, position);
+      if (position === next.length) {
+        deleting = true;
+        setTimeout(typeLoop, 1800);
+        return;
       }
-    });
-
-    drawerLinks.forEach((link) => {
-      link.addEventListener('click', () => {
-        mobileDrawer.classList.remove('open');
-        menuTrigger.querySelector('.trigger-label').textContent = '[TOC]';
-      });
-    });
-
-    document.addEventListener('click', (e) => {
-      if (!menuTrigger.contains(e.target) && !mobileDrawer.contains(e.target) && mobileDrawer.classList.contains('open')) {
-        mobileDrawer.classList.remove('open');
-        menuTrigger.querySelector('.trigger-label').textContent = '[TOC]';
-      }
-    });
+    }
+    setTimeout(typeLoop, deleting ? 75 : 115);
   }
+  setTimeout(typeLoop, 1900);
 
-  // =========================================================================
-  // 5. SCROLL-SPY ACTIVE LINK SYNCHRONIZATION
-  // =========================================================================
-  const sections = document.querySelectorAll('section[id]');
-  const navAnchors = document.querySelectorAll('.nav-anchor');
+  const menu = document.querySelector('.menu-toggle');
+  const nav = document.querySelector('.desktop-nav');
+  menu?.addEventListener('click', () => {
+    const isOpen = nav.classList.toggle('open');
+    menu.setAttribute('aria-expanded', String(isOpen));
+  });
+  nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
+    nav.classList.remove('open');
+    menu?.setAttribute('aria-expanded', 'false');
+  }));
 
-  const onScroll = () => {
-    const scrollPos = window.scrollY + 160;
-
-    sections.forEach((section) => {
-      const top = section.offsetTop;
-      const height = section.offsetHeight;
-      const id = section.getAttribute('id');
-
-      if (scrollPos >= top && scrollPos < top + height) {
-        navAnchors.forEach((link) => {
-          link.classList.remove('active');
-          if (link.getAttribute('href') === `#${id}`) {
-            link.classList.add('active');
-          }
-        });
-      }
+  const sections = [...document.querySelectorAll('main section[id]')];
+  const links = [...document.querySelectorAll('.desktop-nav a')];
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      links.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`));
     });
-  };
+  }, { rootMargin: '-35% 0px -55% 0px' });
+  sections.forEach((section) => observer.observe(section));
 
-  window.addEventListener('scroll', onScroll);
+  if (typeof THREE === 'undefined') return;
+  const canvas = document.querySelector('#bg-canvas');
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(55, innerWidth / innerHeight, 1, 500);
+  camera.position.z = 95;
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.8));
+  renderer.setSize(innerWidth, innerHeight);
+
+  const count = 900;
+  const geometry = new THREE.BufferGeometry();
+  const positions = new Float32Array(count * 3);
+  for (let i = 0; i < count; i += 1) {
+    const radius = 40 + Math.random() * 130;
+    const angle = Math.random() * Math.PI * 2;
+    positions[i * 3] = Math.cos(angle) * radius;
+    positions[i * 3 + 1] = (Math.random() - 0.5) * 105;
+    positions[i * 3 + 2] = Math.sin(angle) * radius - 30;
+  }
+  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  const material = new THREE.PointsMaterial({ color: 0xef4444, size: 0.7, transparent: true, opacity: 0.38, blending: THREE.AdditiveBlending });
+  const particles = new THREE.Points(geometry, material);
+  scene.add(particles);
+
+  const mouse = { x: 0, y: 0 };
+  const target = { x: 0, y: 0 };
+  window.addEventListener('mousemove', (event) => {
+    mouse.x = (event.clientX / innerWidth - 0.5) * 2;
+    mouse.y = (event.clientY / innerHeight - 0.5) * 2;
+  }, { passive: true });
+  window.addEventListener('resize', () => {
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  });
+  const clock = new THREE.Clock();
+  function animate() {
+    requestAnimationFrame(animate);
+    const elapsed = clock.getElapsedTime();
+    target.x += (mouse.x - target.x) * 0.025;
+    target.y += (mouse.y - target.y) * 0.025;
+    particles.rotation.y = elapsed * 0.018 + target.x * 0.08;
+    particles.rotation.x = Math.sin(elapsed * 0.12) * 0.05 + target.y * 0.05;
+    renderer.render(scene, camera);
+  }
+  animate();
 });
