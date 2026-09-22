@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   const typed = document.querySelector('#typed-text');
-  const words = ['UNKNOWN', 'HIDDEN', 'BURIED'];
+  const words = ['UNSEEN', 'HIDDEN', 'FORGOTTEN', 'BURIED'];
   let word = 0;
   let position = words[0].length;
   let deleting = true;
