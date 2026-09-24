@@ -28,6 +28,7 @@
     <nav class="desktop-nav" aria-label="Primary navigation">
       <a class="active" href="#discover">DISCOVER</a>
       <a href="#collections">COLLECTIONS</a>
+      <a href="#console">CONSOLE</a>
       <a href="#signals">SIGNALS</a>
       <a href="#atlas-map">ATLAS MAP</a>
       <a href="#submit">SUBMIT</a>
@@ -98,8 +99,56 @@
       </div>
     </section>
 
+    <section class="console section-shell" id="console">
+      <div class="section-index"><span>03</span><span>DISCOVERY CONSOLE / SEARCH & FILTER</span><span>INDEX ONLINE</span></div>
+      <div class="console-grid">
+        <div class="console-info">
+          <h2>Discovery<br><span>Console</span></h2>
+          <div class="console-status">
+            <div class="console-status-line"><i class="status-dot"></i> INDEX ONLINE</div>
+            <div class="console-status-line"><strong>1,284</strong> SIGNALS AVAILABLE</div>
+          </div>
+        </div>
+        <div class="console-controls">
+          <div class="console-search">
+            <span class="search-prompt">&gt;</span>
+            <input type="text" id="signal-search" class="search-input" placeholder="Search signals..." autocomplete="off" spellcheck="false">
+            <span class="search-blink"></span>
+          </div>
+          <div class="console-filters">
+            <div class="filter-label">FILTER //</div>
+            <div class="filter-chips">
+              <button class="filter-chip active" data-filter="all">ALL</button>
+              <button class="filter-chip" data-filter="portfolio">PORTFOLIOS</button>
+              <button class="filter-chip" data-filter="interactive">INTERACTIVE</button>
+              <button class="filter-chip" data-filter="ai">AI</button>
+              <button class="filter-chip" data-filter="tool">TOOLS</button>
+              <button class="filter-chip" data-filter="game">GAMES</button>
+              <button class="filter-chip" data-filter="art">ART</button>
+              <button class="filter-chip" data-filter="opensource">OPEN SOURCE</button>
+              <button class="filter-chip" data-filter="retro">RETRO</button>
+              <button class="filter-chip" data-filter="experiment">EXPERIMENTS</button>
+            </div>
+          </div>
+          <div class="console-sort-row">
+            <div class="sort-controls">
+              <span class="sort-label">SORT //</span>
+              <button class="sort-btn active" data-sort="recent">RECENT</button>
+              <button class="sort-btn" data-sort="popular">POPULAR</button>
+              <button class="sort-btn" data-sort="random">RANDOM</button>
+              <button class="sort-btn" data-sort="editors">EDITOR'S PICK</button>
+            </div>
+            <button class="random-signal-btn" id="random-signal">
+              <span class="random-pulse"></span>
+              RANDOM SIGNAL ↗
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="archive section-shell" id="signals">
-      <div class="section-index"><span>03</span><span>SIGNAL ARCHIVE / CLASSIFIED DISCOVERIES</span><span>ACTIVE INDEX</span></div>
+      <div class="section-index"><span>04</span><span>SIGNAL ARCHIVE / CLASSIFIED DISCOVERIES</span><span>ACTIVE INDEX</span></div>
       <div class="archive-header">
         <h2>Signal <span>Archive</span></h2>
         <p>Classified internet discoveries. Browse the index.</p>
@@ -172,7 +221,7 @@
     </section>
 
     <section class="featured-signals section-shell" id="atlas-map">
-      <div class="section-index"><span>04</span><span>FEATURED SIGNALS / CURATED</span><span>HAND-PICKED</span></div>
+      <div class="section-index"><span>05</span><span>FEATURED SIGNALS / CURATED</span><span>HAND-PICKED</span></div>
       <div class="featured-grid">
         <div class="featured-heading">
           <h2>Featured<br><span>Signals</span></h2>
@@ -228,7 +277,7 @@
 
     <section class="join section-shell" id="submit">
       <div class="join-mark">[ATL]</div>
-      <p class="eyebrow"><span>05</span> OPEN CHANNEL / ENCRYPTED</p>
+      <p class="eyebrow"><span>06</span> OPEN CHANNEL / ENCRYPTED</p>
       <h2>Submit your<br><em>signal.</em></h2>
       <p class="join-copy">Found a dead link that leads somewhere? A forgotten archive? A signal no one else has mapped?
         Drop your coordinates. The next discovery starts with you.</p>
