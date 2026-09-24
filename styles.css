@@ -82,8 +82,7 @@ button {
 .header-signal,
 .section-index,
 .eyebrow,
-.card-top,
-.card-footer,
+.archive-col-head,
 .signal-list-head,
 footer,
 .radar-label,
@@ -483,15 +482,13 @@ main {
     margin-top: 90px
 }
 
-.intro h2,
-.section-heading h2 {
+.intro h2 {
     font-size: clamp(44px, 6vw, 88px);
     line-height: .95;
     letter-spacing: -.07em
 }
 
-.intro h2 span,
-.section-heading h2 span {
+.intro h2 span {
     color: var(--red)
 }
 
@@ -535,203 +532,173 @@ main {
     line-height: 1.5
 }
 
-.events {
+.archive {
     max-width: none;
     background: rgba(255, 255, 255, .012)
 }
 
-.section-heading {
+.archive-header {
     display: flex;
     justify-content: space-between;
     align-items: end;
     margin: 78px 0 55px
 }
 
-.section-heading p {
+.archive-header h2 {
+    font-size: clamp(44px, 6vw, 88px);
+    line-height: .95;
+    letter-spacing: -.07em
+}
+
+.archive-header h2 span {
+    color: var(--red)
+}
+
+.archive-header p {
     font: 11px var(--mono);
     color: var(--muted)
 }
 
-.card-stack-container {
-    max-width: 1060px;
-    margin: auto;
-    min-height: 555px;
-    position: relative;
-    display: flex;
-    justify-content: center
+.archive-table {
+    max-width: 1200px;
+    margin: 0 auto
 }
 
-.event-card {
-    position: absolute;
-    width: min(75vw, 520px);
-    min-height: 550px;
-    padding: 25px 27px 21px;
-    border: 1px solid rgba(255, 255, 255, .15);
-    background: linear-gradient(150deg, rgba(30, 30, 30, .88), rgba(10, 10, 10, .96));
-    display: flex;
-    flex-direction: column;
-    transition: transform .65s cubic-bezier(.2, .8, .2, 1), filter .5s, box-shadow .5s
-}
-
-.event-card:nth-child(1) {
-    transform: translateX(-110px) rotate(-7deg);
-    z-index: 1
-}
-
-.event-card:nth-child(2) {
-    transform: translateY(7px) rotate(1deg);
-    z-index: 2
-}
-
-.event-card:nth-child(3) {
-    transform: translateX(110px) rotate(7deg);
-    z-index: 1
-}
-
-.card-stack-container:hover .event-card:nth-child(1) {
-    transform: translateX(-370px) rotate(-14deg)
-}
-
-.card-stack-container:hover .event-card:nth-child(2) {
-    transform: translateY(-18px) rotate(0)
-}
-
-.card-stack-container:hover .event-card:nth-child(3) {
-    transform: translateX(370px) rotate(14deg)
-}
-
-.event-card:hover {
-    z-index: 4 !important;
-    filter: brightness(1.2);
-    box-shadow: 0 25px 70px rgba(0, 0, 0, .7)
-}
-
-.card-top,
-.card-footer {
-    display: flex;
-    justify-content: space-between;
+.archive-col-head {
+    display: grid;
+    grid-template-columns: 80px 1.2fr .7fr 1.8fr 1.2fr 60px 30px;
+    gap: 0 16px;
+    padding: 0 12px 14px;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: .1em;
     color: var(--muted)
 }
 
-.card-top span:last-child {
+.archive-entry {
+    display: grid;
+    grid-template-columns: 80px 1.2fr .7fr 1.8fr 1.2fr 60px 30px;
+    gap: 0 16px;
+    align-items: center;
+    padding: 20px 12px;
+    border-bottom: 1px solid var(--line);
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition: background .3s, border-color .3s, box-shadow .3s;
+    position: relative
+}
+
+.archive-entry::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--red);
+    opacity: 0;
+    transition: opacity .3s
+}
+
+.archive-entry:hover {
+    background: rgba(239, 68, 68, .04);
+    border-color: rgba(239, 68, 68, .18);
+    box-shadow: 0 0 40px rgba(239, 68, 68, .04)
+}
+
+.archive-entry:hover::before {
+    opacity: 1
+}
+
+.arc-id {
+    font: 10px var(--mono);
+    letter-spacing: .06em;
+    color: var(--red);
+    transition: text-shadow .3s
+}
+
+.archive-entry:hover .arc-id {
+    text-shadow: 0 0 12px rgba(239, 68, 68, .5)
+}
+
+.arc-name {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -.02em;
+    transition: color .3s
+}
+
+.archive-entry:hover .arc-name {
     color: var(--white)
 }
 
-.card-number {
-    font-size: 11px;
-    color: var(--red);
-    margin: 35px 0 12px
-}
-
-.card-art {
-    height: 190px;
+.arc-cat {
+    font: 10px var(--mono);
+    letter-spacing: .06em;
+    color: var(--muted);
     border: 1px solid var(--line);
-    position: relative;
-    overflow: hidden;
-    display: grid;
-    place-items: center;
-    margin-bottom: 27px
+    padding: 4px 10px;
+    text-align: center;
+    white-space: nowrap;
+    transition: border-color .3s, color .3s
 }
 
-.card-art span {
-    font-size: 61px;
-    font-weight: 800;
-    letter-spacing: -.1em;
-    position: relative;
-    z-index: 1
+.archive-entry:hover .arc-cat {
+    border-color: rgba(239, 68, 68, .4);
+    color: var(--white)
 }
 
-.art-gala {
-    background: radial-gradient(circle at 50% 42%, #b19446 0, #4d261e 24%, #160b0b 63%)
-}
-
-.art-gala i {
-    width: 230px;
-    height: 230px;
-    border: 1px solid #d9b85b;
-    border-radius: 50%;
-    position: absolute;
-    opacity: .7
-}
-
-.art-prompt {
-    background: #141414
-}
-
-.art-prompt span {
-    color: var(--red);
-    font-family: var(--mono);
-    font-size: 66px
-}
-
-.art-prompt i {
-    position: absolute;
-    width: 60%;
-    height: 1px;
-    background: var(--red);
-    transform: rotate(22deg);
-    opacity: .5
-}
-
-.art-prompt i:nth-child(2) {
-    transform: rotate(-22deg);
-    width: 44%
-}
-
-.art-prompt i:nth-child(3) {
-    transform: rotate(90deg);
-    height: 60%;
-    width: 1px
-}
-
-.art-community {
-    background: #0e1717
-}
-
-.art-community span {
-    color: #a8dddd;
-    font-family: var(--mono)
-}
-
-.grid-art {
-    position: absolute;
-    inset: 0;
-    background-image: linear-gradient(rgba(150, 220, 220, .12) 1px, transparent 1px), linear-gradient(90deg, rgba(150, 220, 220, .12) 1px, transparent 1px);
-    background-size: 25px 25px;
-    transform: perspective(300px) rotateX(55deg) scale(1.4);
-    transform-origin: center bottom
-}
-
-.card-content {
-    flex: 1
-}
-
-.card-content h3 {
-    font-size: 26px;
-    letter-spacing: -.06em;
-    margin-bottom: 13px
-}
-
-.card-content h3 small {
-    font-size: 14px;
-    font-weight: 400
-}
-
-.card-content p {
+.arc-desc {
     font-size: 12px;
-    line-height: 1.7;
-    color: var(--muted)
+    line-height: 1.6;
+    color: var(--muted);
+    transition: color .3s
 }
 
-.card-footer {
-    border-top: 1px solid var(--line);
-    padding-top: 15px;
-    margin-top: 18px
+.archive-entry:hover .arc-desc {
+    color: rgba(243, 244, 246, .65)
 }
 
-.card-footer span {
+.arc-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap
+}
+
+.arc-tags i {
+    font-style: normal;
+    font: 9px var(--mono);
+    letter-spacing: .04em;
+    color: rgba(243, 244, 246, .35);
+    border: 1px solid rgba(255, 255, 255, .07);
+    padding: 3px 8px;
+    transition: border-color .3s, color .3s
+}
+
+.archive-entry:hover .arc-tags i {
+    border-color: rgba(239, 68, 68, .25);
+    color: rgba(243, 244, 246, .6)
+}
+
+.arc-year {
+    font: 10px var(--mono);
+    color: var(--muted);
+    text-align: center
+}
+
+.arc-visit {
+    font-size: 17px;
+    color: var(--muted);
+    transition: color .3s, transform .3s;
+    display: inline-block;
+    text-align: center
+}
+
+.archive-entry:hover .arc-visit {
     color: var(--red);
-    font-size: 17px
+    transform: translate(2px, -2px)
 }
 
 .featured-grid {
@@ -1038,38 +1005,34 @@ footer b {
         font-size: 60px
     }
 
-    .section-heading {
+    .archive-header {
         display: block;
         margin: 60px 0 35px
     }
 
-    .section-heading p {
+    .archive-header p {
         margin-top: 20px
     }
 
-    .card-stack-container {
-        min-height: 1500px;
-        display: block
+    .archive-col-head {
+        display: none
     }
 
-    .event-card {
-        position: relative;
-        width: 100%;
-        min-height: 440px;
-        margin: 0 auto 25px;
-        transform: none !important
+    .archive-entry {
+        grid-template-columns: 60px 1fr auto;
+        grid-template-rows: auto auto;
+        gap: 4px 12px;
+        padding: 16px 8px
     }
 
-    .card-stack-container:hover .event-card {
-        transform: none !important
+    .arc-desc {
+        grid-column: 1 / -1;
+        font-size: 11px
     }
 
-    .card-art {
-        height: 150px
-    }
-
-    .card-content h3 {
-        font-size: 23px
+    .arc-tags,
+    .arc-year {
+        display: none
     }
 
     .signal-row {
