@@ -84,7 +84,7 @@ button {
 .eyebrow,
 .card-top,
 .card-footer,
-.track-head,
+.signal-list-head,
 footer,
 .radar-label,
 .hud {
@@ -484,16 +484,14 @@ main {
 }
 
 .intro h2,
-.section-heading h2,
-.leaderboard h2 {
+.section-heading h2 {
     font-size: clamp(44px, 6vw, 88px);
     line-height: .95;
     letter-spacing: -.07em
 }
 
 .intro h2 span,
-.section-heading h2 span,
-.leaderboard h2 span {
+.section-heading h2 span {
     color: var(--red)
 }
 
@@ -508,8 +506,7 @@ main {
     margin-bottom: 28px
 }
 
-.intro-copy>p:not(.large-copy),
-.leaderboard-grid>div>p {
+.intro-copy>p:not(.large-copy) {
     color: var(--muted);
     line-height: 1.8;
     font-size: 14px
@@ -737,19 +734,39 @@ main {
     font-size: 17px
 }
 
-.leaderboard-grid {
+.featured-grid {
     display: grid;
     grid-template-columns: .8fr 1.2fr;
     gap: 8vw;
     margin-top: 90px
 }
 
-.tracks {
-    display: grid;
-    gap: 55px
+.featured-heading h2 {
+    font-size: clamp(44px, 6vw, 88px);
+    line-height: .95;
+    letter-spacing: -.07em
 }
 
-.track-head {
+.featured-heading h2 span {
+    color: var(--red)
+}
+
+.featured-heading p {
+    color: var(--muted);
+    line-height: 1.8;
+    font-size: 14px;
+    margin-top: 18px
+}
+
+.signal-list {
+    display: flex;
+    flex-direction: column
+}
+
+.signal-list-head {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .08em;
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid var(--line);
@@ -757,38 +774,92 @@ main {
     color: var(--muted)
 }
 
-.track-head b {
+.signal-list-head b {
     color: var(--red);
     font-weight: 400
 }
 
-.track ol {
-    list-style: none
-}
-
-.track li {
-    border-bottom: 1px solid var(--line);
+.signal-row {
     display: grid;
-    grid-template-columns: 45px 1fr 20px;
+    grid-template-columns: 40px 1fr auto auto 22px;
     align-items: center;
-    padding: 19px 0
+    gap: 0 16px;
+    padding: 18px 8px;
+    border-bottom: 1px solid var(--line);
+    transition: background .28s, border-color .28s;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    position: relative
 }
 
-.track li span,
-.track li i {
+.signal-row:hover {
+    background: rgba(239, 68, 68, .06);
+    border-color: rgba(239, 68, 68, .22)
+}
+
+.signal-num {
     font: 10px var(--mono);
     color: var(--muted);
-    font-style: normal
+    transition: color .28s
 }
 
-.track li i {
+.signal-row:hover .signal-num {
     color: var(--red)
 }
 
-.track li strong {
-    font-size: 18px;
-    font-weight: 600
+.signal-name {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -.02em;
+    transition: color .28s
 }
+
+.signal-row:hover .signal-name {
+    color: var(--red)
+}
+
+.signal-cat {
+    font: 10px var(--mono);
+    letter-spacing: .06em;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    padding: 4px 10px;
+    white-space: nowrap;
+    transition: border-color .28s, color .28s
+}
+
+.signal-row:hover .signal-cat {
+    border-color: rgba(239, 68, 68, .4);
+    color: var(--white)
+}
+
+.signal-desc {
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 280px;
+    transition: color .28s
+}
+
+.signal-row:hover .signal-desc {
+    color: rgba(243, 244, 246, .7)
+}
+
+.signal-link {
+    font-size: 17px;
+    color: var(--muted);
+    transition: color .28s, transform .28s;
+    display: inline-block
+}
+
+.signal-row:hover .signal-link {
+    color: var(--red);
+    transform: translate(2px, -2px)
+}
+
 
 .join {
     text-align: center;
@@ -957,7 +1028,7 @@ footer b {
     }
 
     .intro-grid,
-    .leaderboard-grid {
+    .featured-grid {
         grid-template-columns: 1fr;
         gap: 50px;
         margin-top: 60px
@@ -1001,8 +1072,14 @@ footer b {
         font-size: 23px
     }
 
-    .tracks {
-        gap: 40px
+    .signal-row {
+        grid-template-columns: 30px 1fr auto 18px;
+        gap: 0 10px;
+        padding: 14px 4px
+    }
+
+    .signal-desc {
+        display: none
     }
 
     .join {
@@ -1066,8 +1143,13 @@ footer b {
         display: none
     }
 
-    .track li strong {
-        font-size: 15px
+    .signal-name {
+        font-size: 14px
+    }
+
+    .signal-cat {
+        font-size: 8px;
+        padding: 3px 7px
     }
 
     .join h2 {
