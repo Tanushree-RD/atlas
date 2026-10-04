@@ -59,6 +59,3 @@ npm run dev
 
 Suggestions for interesting websites, bug reports, and feature ideas are always welcome.
 
-## License
-
-MIT
