@@ -171,7 +171,7 @@ main {
 
 .hero {
     min-height: 100vh;
-    padding: 170px 8vw 80px;
+    padding: 130px 8vw 60px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
@@ -184,7 +184,7 @@ main {
 
 .eyebrow {
     color: var(--muted);
-    margin-bottom: 30px
+    margin-bottom: 24px
 }
 
 .eyebrow span,
@@ -232,7 +232,7 @@ main {
 .hero-lower {
     display: flex;
     gap: 55px;
-    margin: 55px 0 42px;
+    margin: 36px 0 32px;
     align-items: flex-start
 }
 
@@ -256,10 +256,20 @@ main {
     border-bottom: 1px solid var(--red);
     padding-bottom: 12px;
     display: inline-flex;
-    gap: 25px
+    gap: 20px;
+    transition: color .2s, border-color .2s;
 }
 
-.arrow-link span,
+.arrow-link span {
+    color: var(--red);
+    font-size: 16px;
+    transition: transform .2s ease;
+}
+
+.arrow-link:hover span {
+    transform: translateX(5px);
+}
+
 .join-button span {
     color: var(--red);
     font-size: 18px
