@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ATLAS Curated Collection — Handpicked internet exhibits and rare digital landscapes.">
+  <title id="page-title">ATLAS / Collection Exhibit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .collection-page {
+      padding-top: 130px;
+      padding-bottom: 120px;
+      min-height: 100vh;
+    }
+
+    .col-hero {
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 48px;
+      margin-bottom: 60px;
+    }
+
+    .col-breadcrumb {
+      font: 11px var(--mono);
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .col-breadcrumb a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color .2s;
+    }
+
+    .col-breadcrumb a:hover {
+      color: var(--red);
+    }
+
+    .col-breadcrumb span {
+      color: rgba(255, 255, 255, .2);
+    }
+
+    .col-breadcrumb .active-crumb {
+      color: var(--red);
+    }
+
+    .col-hero-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .col-hero-title {
+      font-size: clamp(38px, 5.5vw, 76px);
+      line-height: .96;
+      letter-spacing: -.06em;
+      font-weight: 800;
+      color: var(--white);
+      max-width: 800px;
+      margin: 0 0 16px;
+    }
+
+    .col-hero-meta {
+      font: 12px var(--mono);
+      letter-spacing: .04em;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .col-hero-count {
+      color: var(--red);
+      font-weight: 700;
+    }
+
+    .col-curatorial-note {
+      color: rgba(243, 244, 246, .7);
+      font-size: 15px;
+      line-height: 1.7;
+      max-width: 600px;
+      margin: 20px 0 0;
+    }
+
+    .col-back-btn {
+      font: 11px var(--mono);
+      letter-spacing: .08em;
+      color: var(--white);
+      border: 1px solid var(--line);
+      padding: 12px 20px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all .25s ease;
+      white-space: nowrap;
+    }
+
+    .col-back-btn:hover {
+      border-color: var(--red);
+      color: var(--red);
+      background: rgba(239, 68, 68, .05);
+    }
+
+    .col-grid-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .col-grid-label {
+      font: 11px var(--mono);
+      letter-spacing: .1em;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .col-grid-label::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 8px var(--red);
+    }
+
+    .exhibit-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .exhibit-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+      }
+      .col-hero-main {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 580px) {
+      .exhibit-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="ATLAS home">
+      <span class="brand-mark">[ATL]</span>
+      <span class="brand-name">ATLAS<span>.</span></span>
+      <span class="brand-sub">INTERNET DISCOVERY PLATFORM</span>
+    </a>
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      <a href="index.html#discover">DISCOVER</a>
+      <a href="index.html#about">ABOUT</a>
+      <a class="active" href="index.html#collections">COLLECTIONS</a>
+      <a href="index.html#signals">FEATURED</a>
+      <a href="index.html#submit">SUBMIT</a>
+    </nav>
+    <div class="header-signal"><i></i> SIGNAL PATH / ACTIVE <b>EXHIBIT</b></div>
+  </header>
+
+  <main class="collection-page section-shell">
+    <div class="col-hero">
+      <div class="col-breadcrumb">
+        <a href="index.html">ATLAS</a>
+        <span>/</span>
+        <a href="index.html#collections">COLLECTIONS</a>
+        <span>/</span>
+        <span class="active-crumb" id="breadcrumb-col">EXHIBIT</span>
+      </div>
+
+      <div class="col-hero-main">
+        <div>
+          <h1 class="col-hero-title" id="col-title">100 Websites Everyone Should Visit</h1>
+          <div class="col-hero-meta">
+            <span class="col-hero-count" id="col-count">100 sites</span>
+            <span>•</span>
+            <span id="col-desc">Essential internet experiences</span>
+          </div>
+          <p class="col-curatorial-note" id="col-note">
+            A preserved index of foundational landmarks, creative breakthroughs, and interactive milestones across thirty years of the open web.
+          </p>
+        </div>
+        <a href="index.html#collections" class="col-back-btn">← ALL COLLECTIONS</a>
+      </div>
+    </div>
+
+    <div class="col-grid-header">
+      <span class="col-grid-label">CURATED EXHIBITS IN THIS COLLECTION</span>
+    </div>
+
+    <div class="exhibit-grid" id="exhibit-grid">
+      <!-- Cards rendered dynamically based on collection -->
+    </div>
+  </main>
+
+  <footer>
+    <span>© 2026 ATLAS / INTERNET DISCOVERY PLATFORM</span>
+    <span>BUILT WITH OBSESSION <b>●</b></span>
+    <span>DEPTH ∞ / LAYER UNKNOWN</span>
+  </footer>
+
+  <script type="module">
+    const COLLECTIONS_MAP = {
+      '100-websites': {
+        title: '100 Websites Everyone Should Visit',
+        count: '100 sites',
+        desc: 'Essential internet experiences',
+        note: 'A preserved index of foundational landmarks, creative breakthroughs, and interactive milestones across thirty years of the open web.',
+        items: [
+          { name: 'Neal.fun', cat: 'Interactive', desc: 'Playful internet experiments and visual rabbit holes.', img: 'assets/neal-fun-preview.jpg', link: 'https://neal.fun', id: 'SIG-001' },
+          { name: 'Radio Garden', cat: 'Exploration', desc: 'Spin the globe and listen to live radio stations worldwide.', img: 'assets/radio-garden-preview.jpg', link: 'https://radio.garden', id: 'SIG-002' },
+          { name: 'Window Swap', cat: 'Experience', desc: "Look through someone else's window, anywhere on Earth.", img: 'assets/window-swap-preview.jpg', link: 'https://window-swap.com', id: 'SIG-003' },
+          { name: 'Zoomquilt', cat: 'Art', desc: 'An infinitely zooming collaborative surreal painting.', img: 'assets/zoomquilt-preview.jpg', link: 'https://zoomquilt.org', id: 'SIG-004' },
+          { name: 'Pointer Pointer', cat: 'Game', desc: 'Move your cursor — a photo will point right at it.', img: 'assets/pointer-pointer-preview.jpg', link: 'https://pointerpointer.com', id: 'SIG-005' },
+          { name: 'Earth Nullschool', cat: 'Visualization', desc: 'Real-time interactive visualization of global weather and currents.', img: 'assets/earth-nullschool-preview.jpg', link: 'https://earth.nullschool.net', id: 'SIG-007' }
+        ]
+      },
+      'beautiful-portfolios': {
+        title: 'Beautiful Portfolios',
+        count: '42 sites',
+        desc: 'Exceptional personal websites',
+        note: 'Inspiring personal websites, bespoke digital residences, and innovative interaction designs crafted by independent designers and developers.',
+        items: [
+          { name: 'Window Swap', cat: 'Experience', desc: 'A minimalist meditation on human connection through ambient windows.', img: 'assets/window-swap-preview.jpg', link: 'https://window-swap.com', id: 'SIG-003' },
+          { name: 'Neal.fun', cat: 'Interactive', desc: 'The creative playground and digital laboratory of Neal Agarwal.', img: 'assets/neal-fun-preview.jpg', link: 'https://neal.fun', id: 'SIG-001' },
+          { name: 'Zoomquilt', cat: 'Art', desc: 'Collaborative illusion painting project created by Nikolaus Baumgarten.', img: 'assets/zoomquilt-preview.jpg', link: 'https://zoomquilt.org', id: 'SIG-004' }
+        ]
+      },
+      'browser-experiments': {
+        title: 'Browser Experiments',
+        count: '31 sites',
+        desc: 'Interactive web experiments',
+        note: 'Projects pushing the raw technical boundaries of WebGL, audio synthesis, shaders, and browser hardware APIs.',
+        items: [
+          { name: 'Pointer Pointer', cat: 'Game', desc: 'Algorithmic cursor coordinates mapped to archival human snapshots.', img: 'assets/pointer-pointer-preview.jpg', link: 'https://pointerpointer.com', id: 'SIG-005' },
+          { name: 'Radio Garden', cat: 'Exploration', desc: 'WebGL 3D planetary mesh paired with real-time stream decoding.', img: 'assets/radio-garden-preview.jpg', link: 'https://radio.garden', id: 'SIG-002' },
+          { name: 'Earth Nullschool', cat: 'Visualization', desc: 'Global supercomputer weather models visualized in real-time WebGL particles.', img: 'assets/earth-nullschool-preview.jpg', link: 'https://earth.nullschool.net', id: 'SIG-007' }
+        ]
+      },
+      'the-weird-internet': {
+        title: 'The Weird Internet',
+        count: '56 sites',
+        desc: 'Strange, surprising, unforgettable',
+        note: 'The idiosyncratic, bizarre, and charmingly uncommercial corners of the web that remind us why the internet was invented.',
+        items: [
+          { name: 'This Person Does Not Exist', cat: 'AI', desc: 'AI-generated human faces rendered from pure synthetic latent noise.', img: 'assets/thispersondoesnotexist-preview.png', link: 'https://thispersondoesnotexist.com', id: 'SIG-006' },
+          { name: 'Pointer Pointer', cat: 'Game', desc: 'Move your cursor anywhere and an eerie photograph will point to it.', img: 'assets/pointer-pointer-preview.jpg', link: 'https://pointerpointer.com', id: 'SIG-005' },
+          { name: 'Zoomquilt', cat: 'Art', desc: 'An endless hypnotic tunnel through mythical and gothic landscapes.', img: 'assets/zoomquilt-preview.jpg', link: 'https://zoomquilt.org', id: 'SIG-004' }
+        ]
+      },
+      'digital-museums': {
+        title: 'Digital Museums',
+        count: '18 sites',
+        desc: 'Museums, archives and history',
+        note: 'Digital archives preserving net history, forgotten ephemera, tactile simulations, and artistic legacies.',
+        items: [
+          { name: 'Radio Garden', cat: 'Exploration', desc: 'A living museum of world broadcast culture and atmospheric transmissions.', img: 'assets/radio-garden-preview.jpg', link: 'https://radio.garden', id: 'SIG-002' },
+          { name: 'Zoomquilt', cat: 'Art', desc: 'An archival digital artifact preserved and maintained since 2004.', img: 'assets/zoomquilt-preview.jpg', link: 'https://zoomquilt.org', id: 'SIG-004' },
+          { name: 'Neal.fun', cat: 'Interactive', desc: 'Exhibits dedicated to space scale, oceanic depth, and digital history.', img: 'assets/neal-fun-preview.jpg', link: 'https://neal.fun', id: 'SIG-001' }
+        ]
+      },
+      'hidden-gems': {
+        title: 'Hidden Gems',
+        count: '73 sites',
+        desc: 'Underrated websites worth exploring',
+        note: 'Overlooked discoveries, secret tools, and quiet creations off the beaten track of search engine algorithms.',
+        items: [
+          { name: 'Earth Nullschool', cat: 'Visualization', desc: 'Real-time interactive visualization of global weather and ocean currents.', img: 'assets/earth-nullschool-preview.jpg', link: 'https://earth.nullschool.net', id: 'SIG-007' },
+          { name: 'Window Swap', cat: 'Experience', desc: 'Quiet moments viewed through open windows across Tokyo, Paris, and beyond.', img: 'assets/window-swap-preview.jpg', link: 'https://window-swap.com', id: 'SIG-003' },
+          { name: 'This Person Does Not Exist', cat: 'AI', desc: 'Synthetic human portraits that look shockingly real.', img: 'assets/thispersondoesnotexist-preview.png', link: 'https://thispersondoesnotexist.com', id: 'SIG-006' }
+        ]
+      }
+    };
+
+    const params = new URLSearchParams(window.location.search);
+    const colId = params.get('id') || '100-websites';
+    const data = COLLECTIONS_MAP[colId] || COLLECTIONS_MAP['100-websites'];
+
+    document.getElementById('page-title').textContent = `ATLAS / ${data.title}`;
+    document.getElementById('breadcrumb-col').textContent = data.title;
+    document.getElementById('col-title').textContent = data.title;
+    document.getElementById('col-count').textContent = data.count;
+    document.getElementById('col-desc').textContent = data.desc;
+    document.getElementById('col-note').textContent = data.note;
+
+    const grid = document.getElementById('exhibit-grid');
+    grid.innerHTML = data.items.map(item => `
+      <a href="signal.html?id=${item.id}" class="signal-card">
+        <div class="signal-card-img">
+          <img src="${item.img}" alt="${item.name} website preview" loading="lazy">
+          <span class="signal-card-cat">${item.cat}</span>
+        </div>
+        <div class="signal-card-body">
+          <div class="signal-card-name">
+            ${item.name}
+            <svg class="signal-card-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M5 11L11 5M11 5H6M11 5V10"/>
+            </svg>
+          </div>
+          <p class="signal-card-desc">${item.desc}</p>
+        </div>
+      </a>
+    `).join('');
+  </script>
+</body>
+
+</html>

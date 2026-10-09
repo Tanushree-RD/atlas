@@ -27,10 +27,9 @@
     </a>
     <nav class="desktop-nav" aria-label="Primary navigation">
       <a class="active" href="#discover">DISCOVER</a>
+      <a href="#about">ABOUT</a>
       <a href="#collections">COLLECTIONS</a>
-      <a href="#console">CONSOLE</a>
-      <a href="#signals">SIGNALS</a>
-      <a href="#atlas-map">ATLAS MAP</a>
+      <a href="#signals">FEATURED</a>
       <a href="#submit">SUBMIT</a>
       <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">DARKFEED /</a>
       <a href="https://www.instagram.com/" target="_blank" rel="noreferrer">DISPATCH /</a>
@@ -49,7 +48,7 @@
           <p class="tagline">Discover.<br>Explore.<br>Collect.</p>
           <p class="hero-description">Atlas is a curated platform for discovering remarkable websites, creative projects, digital art, and hidden corners of the internet.</p>
         </div>
-        <a class="arrow-link" href="#collections">ENTER THE NETWORK <span>→</span></a>
+        <a class="arrow-link" href="#collections">EXPLORE COLLECTIONS <span>→</span></a>
       </div>
       <div class="radar-wrap">
         <div class="radar-label label-top">ATLAS // RADAR_ACTIVE</div>
@@ -65,7 +64,7 @@
       </div>
     </section>
 
-    <section class="intro section-shell" id="collections">
+    <section class="intro section-shell" id="about">
       <div class="section-index"><span>02</span><span>ABOUT THE PLATFORM</span><span>EST. / CLASSIFIED</span></div>
       <div class="intro-grid">
         <h2>Signals are<br><span>more useful</span><br>when found.</h2>
@@ -83,128 +82,102 @@
       </div>
     </section>
 
-    <section class="console section-shell" id="console">
-      <div class="section-index"><span>03</span><span>DISCOVERY CONSOLE / SEARCH & FILTER</span><span>INDEX ONLINE</span></div>
-      <div class="console-grid">
-        <div class="console-info">
-          <h2>Discovery<br><span>Console</span></h2>
-          <div class="console-status">
-            <div class="console-status-line"><i class="status-dot"></i> INDEX ONLINE</div>
-            <div class="console-status-line"><strong>1,284</strong> SIGNALS AVAILABLE</div>
+    <section class="collections-section section-shell" id="collections">
+      <div class="collections-grid">
+        <div class="collections-left">
+          <div class="collections-header">
+            <h2 class="collections-title">Collections</h2>
+            <p class="collections-sub">Curated paths through the web.</p>
+          </div>
+          <div class="collections-preview" aria-hidden="true">
+            <div class="collections-preview-frame">
+              <img id="col-preview-img" src="assets/neal-fun-preview.jpg" alt="Collection preview" class="col-preview-image">
+              <div class="col-preview-info">
+                <span class="col-preview-title" id="col-preview-title">100 Websites Everyone Should Visit</span>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="console-controls">
-          <div class="console-search">
-            <span class="search-prompt">&gt;</span>
-            <input type="text" id="signal-search" class="search-input" placeholder="Search signals..." autocomplete="off" spellcheck="false">
-            <span class="search-blink"></span>
-          </div>
-          <div class="console-filters">
-            <div class="filter-label">FILTER //</div>
-            <div class="filter-chips">
-              <button class="filter-chip active" data-filter="all">ALL</button>
-              <button class="filter-chip" data-filter="portfolio">PORTFOLIOS</button>
-              <button class="filter-chip" data-filter="interactive">INTERACTIVE</button>
-              <button class="filter-chip" data-filter="ai">AI</button>
-              <button class="filter-chip" data-filter="tool">TOOLS</button>
-              <button class="filter-chip" data-filter="game">GAMES</button>
-              <button class="filter-chip" data-filter="art">ART</button>
-              <button class="filter-chip" data-filter="opensource">OPEN SOURCE</button>
-              <button class="filter-chip" data-filter="retro">RETRO</button>
-              <button class="filter-chip" data-filter="experiment">EXPERIMENTS</button>
-            </div>
-          </div>
-          <div class="console-sort-row">
-            <div class="sort-controls">
-              <span class="sort-label">SORT //</span>
-              <button class="sort-btn active" data-sort="recent">RECENT</button>
-              <button class="sort-btn" data-sort="popular">POPULAR</button>
-              <button class="sort-btn" data-sort="random">RANDOM</button>
-              <button class="sort-btn" data-sort="editors">EDITOR'S PICK</button>
-            </div>
-            <button class="random-signal-btn" id="random-signal">
-              <span class="random-pulse"></span>
-              RANDOM SIGNAL ↗
-            </button>
+
+        <div class="collections-right">
+          <div class="collections-list" role="list">
+            <a href="collection.html?id=100-websites" class="collection-item active" data-preview="assets/neal-fun-preview.jpg" data-title="100 Websites Everyone Should Visit" role="listitem">
+              <div class="col-item-body">
+                <h3 class="col-item-title">100 Websites Everyone Should Visit</h3>
+                <div class="col-item-meta">
+                  <span class="col-item-count">100 sites</span>
+                  <span class="col-item-sep">•</span>
+                  <span class="col-item-desc">Essential internet experiences</span>
+                </div>
+              </div>
+              <span class="col-item-arrow" aria-hidden="true">→</span>
+            </a>
+
+            <a href="collection.html?id=beautiful-portfolios" class="collection-item" data-preview="assets/window-swap-preview.jpg" data-title="Beautiful Portfolios" role="listitem">
+              <div class="col-item-body">
+                <h3 class="col-item-title">Beautiful Portfolios</h3>
+                <div class="col-item-meta">
+                  <span class="col-item-count">42 sites</span>
+                  <span class="col-item-sep">•</span>
+                  <span class="col-item-desc">Exceptional personal websites</span>
+                </div>
+              </div>
+              <span class="col-item-arrow" aria-hidden="true">→</span>
+            </a>
+
+            <a href="collection.html?id=browser-experiments" class="collection-item" data-preview="assets/pointer-pointer-preview.jpg" data-title="Browser Experiments" role="listitem">
+              <div class="col-item-body">
+                <h3 class="col-item-title">Browser Experiments</h3>
+                <div class="col-item-meta">
+                  <span class="col-item-count">31 sites</span>
+                  <span class="col-item-sep">•</span>
+                  <span class="col-item-desc">Interactive web experiments</span>
+                </div>
+              </div>
+              <span class="col-item-arrow" aria-hidden="true">→</span>
+            </a>
+
+            <a href="collection.html?id=the-weird-internet" class="collection-item" data-preview="assets/thispersondoesnotexist-preview.png" data-title="The Weird Internet" role="listitem">
+              <div class="col-item-body">
+                <h3 class="col-item-title">The Weird Internet</h3>
+                <div class="col-item-meta">
+                  <span class="col-item-count">56 sites</span>
+                  <span class="col-item-sep">•</span>
+                  <span class="col-item-desc">Strange, surprising, unforgettable</span>
+                </div>
+              </div>
+              <span class="col-item-arrow" aria-hidden="true">→</span>
+            </a>
+
+            <a href="collection.html?id=digital-museums" class="collection-item" data-preview="assets/zoomquilt-preview.jpg" data-title="Digital Museums" role="listitem">
+              <div class="col-item-body">
+                <h3 class="col-item-title">Digital Museums</h3>
+                <div class="col-item-meta">
+                  <span class="col-item-count">18 sites</span>
+                  <span class="col-item-sep">•</span>
+                  <span class="col-item-desc">Museums, archives and history</span>
+                </div>
+              </div>
+              <span class="col-item-arrow" aria-hidden="true">→</span>
+            </a>
+
+            <a href="collection.html?id=hidden-gems" class="collection-item" data-preview="assets/earth-nullschool-preview.jpg" data-title="Hidden Gems" role="listitem">
+              <div class="col-item-body">
+                <h3 class="col-item-title">Hidden Gems</h3>
+                <div class="col-item-meta">
+                  <span class="col-item-count">73 sites</span>
+                  <span class="col-item-sep">•</span>
+                  <span class="col-item-desc">Underrated websites worth exploring</span>
+                </div>
+              </div>
+              <span class="col-item-arrow" aria-hidden="true">→</span>
+            </a>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="archive section-shell" id="signals">
-      <div class="section-index"><span>04</span><span>SIGNAL ARCHIVE / CLASSIFIED DISCOVERIES</span><span>ACTIVE INDEX</span></div>
-      <div class="archive-header">
-        <h2>Signal <span>Archive</span></h2>
-        <p>Classified internet discoveries. Browse the index.</p>
-      </div>
-      <div class="archive-table">
-        <div class="archive-col-head">
-          <span>ID</span>
-          <span>SIGNAL</span>
-          <span>CATEGORY</span>
-          <span>DESCRIPTION</span>
-          <span>TAGS</span>
-          <span>YEAR</span>
-          <span></span>
-        </div>
-        <a href="signal.html?id=SIG-001" class="archive-entry">
-          <span class="arc-id">SIG-001</span>
-          <strong class="arc-name">Neal.fun</strong>
-          <span class="arc-cat">Interactive</span>
-          <span class="arc-desc">Playful interactive experiments and educational web experiences.</span>
-          <span class="arc-tags"><i>experiments</i><i>education</i><i>visual</i></span>
-          <span class="arc-year">2019</span>
-          <span class="arc-visit">↗</span>
-        </a>
-        <a href="signal.html?id=SIG-002" class="archive-entry">
-          <span class="arc-id">SIG-002</span>
-          <strong class="arc-name">Radio Garden</strong>
-          <span class="arc-cat">Exploration</span>
-          <span class="arc-desc">Listen to live radio stations anywhere on Earth.</span>
-          <span class="arc-tags"><i>radio</i><i>globe</i><i>live</i></span>
-          <span class="arc-year">2016</span>
-          <span class="arc-visit">↗</span>
-        </a>
-        <a href="signal.html?id=SIG-003" class="archive-entry">
-          <span class="arc-id">SIG-003</span>
-          <strong class="arc-name">Window Swap</strong>
-          <span class="arc-cat">Lifestyle</span>
-          <span class="arc-desc">Open a random stranger's window from around the world.</span>
-          <span class="arc-tags"><i>windows</i><i>travel</i><i>random</i></span>
-          <span class="arc-year">2020</span>
-          <span class="arc-visit">↗</span>
-        </a>
-        <a href="signal.html?id=SIG-004" class="archive-entry">
-          <span class="arc-id">SIG-004</span>
-          <strong class="arc-name">Zoomquilt</strong>
-          <span class="arc-cat">Art</span>
-          <span class="arc-desc">Infinite zoom artwork with surreal transitions.</span>
-          <span class="arc-tags"><i>art</i><i>infinite</i><i>surreal</i></span>
-          <span class="arc-year">2004</span>
-          <span class="arc-visit">↗</span>
-        </a>
-        <a href="signal.html?id=SIG-005" class="archive-entry">
-          <span class="arc-id">SIG-005</span>
-          <strong class="arc-name">Pointer Pointer</strong>
-          <span class="arc-cat">Fun</span>
-          <span class="arc-desc">Finds a photo pointing exactly at your cursor.</span>
-          <span class="arc-tags"><i>cursor</i><i>photos</i><i>game</i></span>
-          <span class="arc-year">2012</span>
-          <span class="arc-visit">↗</span>
-        </a>
-        <a href="signal.html?id=SIG-006" class="archive-entry">
-          <span class="arc-id">SIG-006</span>
-          <strong class="arc-name">This Person Does Not Exist</strong>
-          <span class="arc-cat">AI</span>
-          <span class="arc-desc">AI-generated human faces that don't exist.</span>
-          <span class="arc-tags"><i>ai</i><i>gan</i><i>faces</i></span>
-          <span class="arc-year">2019</span>
-          <span class="arc-visit">↗</span>
-        </a>
-      </div>
-    </section>
-
-    <section class="featured-signals section-shell" id="atlas-map">
+    <section class="featured-signals section-shell" id="signals">
       <div class="featured-header">
         <h2 class="featured-title">Featured <span>Signals</span></h2>
         <p class="featured-sub">Curated websites worth exploring.</p>

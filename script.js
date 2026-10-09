@@ -52,51 +52,33 @@ document.addEventListener('DOMContentLoaded', () => {
   }, { rootMargin: '-35% 0px -55% 0px' });
   sections.forEach((section) => observer.observe(section));
 
-  // Discovery Console — Filter chips
-  const filterChips = document.querySelectorAll('.filter-chip');
-  filterChips.forEach((chip) => {
-    chip.addEventListener('click', () => {
-      filterChips.forEach((c) => c.classList.remove('active'));
-      chip.classList.add('active');
-    });
-  });
+  // Collections — Interactive hover preview
+  const collectionItems = document.querySelectorAll('.collection-item');
+  const previewImg = document.querySelector('#col-preview-img');
+  const previewTitle = document.querySelector('#col-preview-title');
 
-  // Discovery Console — Sort buttons
-  const sortBtns = document.querySelectorAll('.sort-btn');
-  sortBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      sortBtns.forEach((b) => b.classList.remove('active'));
-      btn.classList.add('active');
-    });
-  });
+  collectionItems.forEach((item) => {
+    const handleActive = () => {
+      collectionItems.forEach((c) => c.classList.remove('active'));
+      item.classList.add('active');
 
-  // Discovery Console — Search filtering
-  const searchInput = document.querySelector('#signal-search');
-  const archiveEntries = document.querySelectorAll('.archive-entry');
-  searchInput?.addEventListener('input', () => {
-    const query = searchInput.value.toLowerCase().trim();
-    archiveEntries.forEach((entry) => {
-      const name = entry.querySelector('.arc-name')?.textContent.toLowerCase() || '';
-      const desc = entry.querySelector('.arc-desc')?.textContent.toLowerCase() || '';
-      const cat = entry.querySelector('.arc-cat')?.textContent.toLowerCase() || '';
-      const tags = entry.querySelector('.arc-tags')?.textContent.toLowerCase() || '';
-      const match = !query || name.includes(query) || desc.includes(query) || cat.includes(query) || tags.includes(query);
-      entry.style.display = match ? '' : 'none';
-    });
-  });
+      const previewSrc = item.getAttribute('data-preview');
+      const title = item.getAttribute('data-title');
 
-  // Discovery Console — Random Signal
-  const randomBtn = document.querySelector('#random-signal');
-  randomBtn?.addEventListener('click', () => {
-    const entries = [...document.querySelectorAll('.archive-entry')];
-    if (!entries.length) return;
-    const pick = entries[Math.floor(Math.random() * entries.length)];
-    pick.style.background = 'rgba(239, 68, 68, .12)';
-    pick.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    setTimeout(() => {
-      pick.style.background = '';
-      window.open(pick.href, '_blank');
-    }, 800);
+      if (previewImg && previewSrc && previewImg.getAttribute('src') !== previewSrc) {
+        previewImg.style.opacity = '0.35';
+        setTimeout(() => {
+          previewImg.src = previewSrc;
+          previewImg.style.opacity = '1';
+        }, 90);
+      }
+      if (previewTitle && title) {
+        previewTitle.textContent = title;
+      }
+    };
+
+    item.addEventListener('mouseenter', handleActive);
+    item.addEventListener('focus', handleActive);
   });
 
   if (typeof THREE === 'undefined') return;
