@@ -374,7 +374,7 @@ main {
     color: var(--red)
 }
 
-/* ── Feed List ─────────────────────────────────────── */
+/* ── Feed List — Premium Archive ───────────────────── */
 
 .feed-list {
     border-top: 1px solid var(--line)
@@ -382,15 +382,16 @@ main {
 
 .feed-item {
     display: grid;
-    grid-template-columns: 1fr auto auto auto;
+    grid-template-columns: 48px 1fr auto auto auto auto;
     align-items: center;
-    gap: 20px;
-    padding: 22px 20px;
+    gap: 0;
+    padding: 0 24px;
+    min-height: 72px;
     border-bottom: 1px solid var(--line);
     text-decoration: none;
     color: inherit;
     position: relative;
-    transition: background .25s
+    transition: background .3s ease
 }
 
 .feed-item::before {
@@ -402,86 +403,148 @@ main {
     width: 2px;
     background: var(--red);
     opacity: 0;
-    transition: opacity .25s
+    transition: opacity .3s ease
 }
 
 .feed-item:hover {
-    background: rgba(239, 68, 68, .03)
+    background: rgba(255, 255, 255, .025)
 }
 
 .feed-item:hover::before {
     opacity: 1
 }
 
+/* Index Number */
+
+.feed-item-index {
+    font: 11px var(--mono);
+    letter-spacing: .04em;
+    color: rgba(255, 255, 255, .18);
+    transition: color .3s ease;
+    padding-right: 8px
+}
+
+.feed-item:hover .feed-item-index {
+    color: var(--red)
+}
+
+/* Name & Description */
+
 .feed-item-info {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    min-width: 0
+    gap: 3px;
+    min-width: 0;
+    padding: 18px 0;
+    transition: transform .3s ease
+}
+
+.feed-item:hover .feed-item-info {
+    transform: translateX(6px)
 }
 
 .feed-item-name {
-    font-size: 16px;
-    font-weight: 600;
-    letter-spacing: -.02em;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -.025em;
     color: var(--white);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    transition: color .2s
+    transition: color .3s ease
 }
 
 .feed-item:hover .feed-item-name {
-    color: var(--red)
+    color: var(--white)
 }
 
 .feed-item-desc {
-    font-size: 12px;
-    line-height: 1.5;
-    color: var(--muted);
+    font-size: 12.5px;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, .4);
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis
+    text-overflow: ellipsis;
+    transition: color .3s ease
 }
+
+.feed-item:hover .feed-item-desc {
+    color: rgba(255, 255, 255, .55)
+}
+
+/* Category Badge */
 
 .feed-item-cat {
     font: 9px var(--mono);
     letter-spacing: .07em;
-    color: var(--white);
-    background: rgba(239, 68, 68, .1);
-    border: 1px solid rgba(239, 68, 68, .2);
-    padding: 5px 12px;
+    color: rgba(239, 68, 68, .65);
+    background: rgba(239, 68, 68, .06);
+    border: 1px solid rgba(239, 68, 68, .12);
+    padding: 5px 14px;
     text-transform: uppercase;
     white-space: nowrap;
-    flex-shrink: 0
+    flex-shrink: 0;
+    margin-left: 24px;
+    transition: color .3s ease, border-color .3s ease, background .3s ease
 }
 
-.feed-item-arrow {
-    font: 16px var(--mono);
-    color: var(--muted);
-    transition: color .25s, transform .25s;
+.feed-item:hover .feed-item-cat {
+    color: var(--red);
+    border-color: rgba(239, 68, 68, .35);
+    background: rgba(239, 68, 68, .1)
+}
+
+/* Year */
+
+.feed-item-year {
+    font: 10px var(--mono);
+    letter-spacing: .05em;
+    color: rgba(255, 255, 255, .2);
+    margin-left: 20px;
     flex-shrink: 0;
-    width: 24px;
-    text-align: center
+    transition: color .3s ease
+}
+
+.feed-item:hover .feed-item-year {
+    color: rgba(255, 255, 255, .45)
+}
+
+/* External Link Arrow */
+
+.feed-item-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    margin-left: 16px;
+    flex-shrink: 0;
+    color: rgba(255, 255, 255, .2);
+    transition: color .3s ease, transform .3s ease
+}
+
+.feed-item-arrow svg {
+    width: 14px;
+    height: 14px
 }
 
 .feed-item:hover .feed-item-arrow {
     color: var(--red);
-    transform: translateX(4px)
+    transform: translate(4px, -2px)
 }
 
 /* Empty State */
 
 .feed-empty {
     text-align: center;
-    padding: 80px 20px;
+    padding: 100px 20px;
     border-bottom: 1px solid var(--line)
 }
 
 .feed-empty p {
     font: 12px var(--mono);
     letter-spacing: .06em;
-    color: var(--muted)
+    color: rgba(255, 255, 255, .3)
 }
 
 /* ── Footer ────────────────────────────────────────── */
@@ -545,13 +608,25 @@ footer b {
     }
 
     .feed-item {
-        grid-template-columns: 1fr auto auto;
-        gap: 12px;
-        padding: 18px 14px
+        grid-template-columns: 36px 1fr auto auto auto;
+        padding: 0 16px;
+        min-height: 64px
     }
 
     .feed-item-desc {
         display: none
+    }
+
+    .feed-item-year {
+        display: none
+    }
+
+    .feed-item-cat {
+        margin-left: 16px
+    }
+
+    .feed-item-arrow {
+        margin-left: 8px
     }
 
     .sort-row {
@@ -585,16 +660,30 @@ footer b {
     }
 
     .feed-item {
-        grid-template-columns: 1fr auto;
-        gap: 10px;
-        padding: 16px 10px
+        grid-template-columns: 28px 1fr auto;
+        padding: 0 10px;
+        min-height: 58px
     }
 
     .feed-item-cat {
         display: none
     }
 
+    .feed-item-index {
+        font-size: 9px
+    }
+
     .feed-item-name {
         font-size: 14px
+    }
+
+    .feed-item-info {
+        padding: 14px 0
+    }
+
+    .feed-item-arrow {
+        width: 24px;
+        height: 24px;
+        margin-left: 4px
     }
 }

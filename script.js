@@ -153,18 +153,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     feedEmpty.style.display = 'none';
 
-    signals.forEach(signal => {
+    signals.forEach((signal, i) => {
+      const idx = String(i + 1).padStart(2, '0');
+      const year = signal.year || '';
       const a = document.createElement('a');
       a.className = 'feed-item';
       a.href = `signal.html?id=${signal.id}`;
       a.setAttribute('role', 'listitem');
       a.innerHTML = `
+        <span class="feed-item-index">${idx}</span>
         <div class="feed-item-info">
           <span class="feed-item-name">${signal.name}</span>
           <span class="feed-item-desc">${signal.description}</span>
         </div>
         <span class="feed-item-cat">${signal.category}</span>
-        <span class="feed-item-arrow">→</span>
+        <span class="feed-item-year">${year}</span>
+        <span class="feed-item-arrow">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M5 11L11 5M11 5H6M11 5V10"/>
+          </svg>
+        </span>
       `;
       feedList.appendChild(a);
     });

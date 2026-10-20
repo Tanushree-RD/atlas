@@ -225,6 +225,70 @@ export const SIGNALS = [
     ],
     metadata: { category: 'Visualization', score: 97, difficulty: 'Intermediate', time: '20 min' },
     capture: 'SIGNAL CAPTURE // 2024'
+  },
+  {
+    id: 'SIG-008',
+    name: 'Museum of Endangered Sounds',
+    tagline: 'Preserving the endangered sounds of obsolete technology.',
+    description: 'Preserve obsolete digital sounds before they disappear forever.',
+    screenshot: '',
+    url: 'http://savethesounds.info',
+    creator: 'Brendan Chilcutt',
+    year: 2012,
+    status: 'Active',
+    category: 'Archive',
+    filterCategories: ['retro', 'interactive'],
+    tech: 'HTML5 Audio, Vanilla JS',
+    tags: ['nostalgia', 'sounds', 'retro', 'archive', 'preservation', 'audio'],
+    editorsPick: false,
+    fullDescription: 'A lovingly curated archive of sounds made by now-extinct or endangered technology — dial-up modems, ICQ alerts, the Nokia ringtone, AIM door sounds, and dozens more. Each sound is playable in-browser and paired with the device that created it.',
+    why: 'As technology evolves, the sounds that once defined our daily digital lives vanish silently. This project is equal parts time capsule and love letter to an analog-digital era we are rapidly forgetting.',
+    bestFor: [
+      'Anyone feeling nostalgic for the sounds of early computing',
+      'Sound designers and audio archivists',
+      'Educators teaching the history of personal technology',
+      'Retro tech enthusiasts and collectors'
+    ],
+    notableFeatures: [
+      { title: 'Interactive Sound Board', desc: 'click any device to hear its signature sound instantly' },
+      { title: 'Curated Device Archive', desc: 'modems, printers, game consoles, phones, and more' },
+      { title: 'Zero-UI Playback', desc: 'pure audio focus with minimal visual distraction' },
+      { title: 'Growing Collection', desc: 'community-submitted sounds added over time' }
+    ],
+    metadata: { category: 'Archive', score: 88, difficulty: 'Beginner', time: '8 min' },
+    capture: 'SIGNAL CAPTURE // 2024'
+  },
+  {
+    id: 'SIG-009',
+    name: 'FutureMe',
+    tagline: 'Write a letter to your future self and receive it years later.',
+    description: 'Send letters to your future self, delivered on any date you choose.',
+    screenshot: '',
+    url: 'https://www.futureme.org',
+    creator: 'Matt Sly & Jay Patrikios',
+    year: 2002,
+    status: 'Active',
+    category: 'Writing',
+    filterCategories: ['tool', 'interactive'],
+    tech: 'Ruby on Rails, Email Delivery',
+    tags: ['writing', 'time', 'letters', 'self-reflection', 'email', 'future'],
+    editorsPick: false,
+    fullDescription: 'FutureMe lets you compose an email to yourself that will be delivered on a date of your choosing — days, months, or years in the future. Since 2002, millions of letters have been written and delivered, creating a global archive of human hope, ambition, and introspection.',
+    why: 'In a world of instant everything, FutureMe forces you to think beyond the present moment. Receiving a letter from your past self is startling, emotional, and deeply personal — a private time capsule delivered to your inbox.',
+    bestFor: [
+      'Journaling and self-reflection enthusiasts',
+      'Goal-setters wanting future accountability',
+      'Teachers and therapists using reflective exercises',
+      'Anyone curious about the gap between intention and outcome'
+    ],
+    notableFeatures: [
+      { title: 'Time-Locked Delivery', desc: 'schedule emails days to decades in the future' },
+      { title: 'Public Letters Archive', desc: 'read anonymous letters others have written to themselves' },
+      { title: 'Private by Default', desc: 'all personal letters encrypted and never shared' },
+      { title: '20+ Years Running', desc: 'one of the longest-running web experiments online' }
+    ],
+    metadata: { category: 'Writing', score: 90, difficulty: 'Beginner', time: '10 min' },
+    capture: 'SIGNAL CAPTURE // 2024'
   }
 ];
 
