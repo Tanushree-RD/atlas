@@ -3,7 +3,7 @@ import { SIGNALS, FILTER_CATEGORIES } from './signals-data.js';
 document.addEventListener('DOMContentLoaded', () => {
   // ── Typed Hero Animation ────────────────────────────
   const typed = document.querySelector('#typed-text');
-  const words = ['OBSCURE', 'HIDDEN', 'WEIRD', 'UNSEEN', 'CURIOUS'];
+  const words = ['Obscure', 'Hidden', 'Weird', 'Unseen', 'Curious'];
   let word = 0;
   let position = words[0].length;
   let deleting = true;
@@ -268,51 +268,121 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderFeed();
 
-  // ── Three.js Background ─────────────────────────────
-  if (typeof THREE === 'undefined') return;
+  // ── Animated Luxury Background (Silk / Flowing Contour Moiré) ──
   const canvas = document.querySelector('#bg-canvas');
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(55, innerWidth / innerHeight, 1, 500);
-  camera.position.z = 95;
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.8));
-  renderer.setSize(innerWidth, innerHeight);
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
 
-  const count = 900;
-  const geometry = new THREE.BufferGeometry();
-  const positions = new Float32Array(count * 3);
-  for (let i = 0; i < count; i += 1) {
-    const radius = 40 + Math.random() * 130;
-    const angle = Math.random() * Math.PI * 2;
-    positions[i * 3] = Math.cos(angle) * radius;
-    positions[i * 3 + 1] = (Math.random() - 0.5) * 105;
-    positions[i * 3 + 2] = Math.sin(angle) * radius - 30;
-  }
-  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  const material = new THREE.PointsMaterial({ color: 0xef4444, size: 0.7, transparent: true, opacity: 0.38, blending: THREE.AdditiveBlending });
-  const particles = new THREE.Points(geometry, material);
-  scene.add(particles);
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(dpr, dpr);
+    }
+    resize();
+    window.addEventListener('resize', resize, { passive: true });
 
-  const mouse = { x: 0, y: 0 };
-  const target = { x: 0, y: 0 };
-  window.addEventListener('mousemove', (event) => {
-    mouse.x = (event.clientX / innerWidth - 0.5) * 2;
-    mouse.y = (event.clientY / innerHeight - 0.5) * 2;
-  }, { passive: true });
-  window.addEventListener('resize', () => {
-    camera.aspect = innerWidth / innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(innerWidth, innerHeight);
-  });
-  const clock = new THREE.Clock();
-  function animate() {
-    requestAnimationFrame(animate);
-    const elapsed = clock.getElapsedTime();
-    target.x += (mouse.x - target.x) * 0.025;
-    target.y += (mouse.y - target.y) * 0.025;
-    particles.rotation.y = elapsed * 0.018 + target.x * 0.08;
-    particles.rotation.x = Math.sin(elapsed * 0.12) * 0.05 + target.y * 0.05;
-    renderer.render(scene, camera);
+    // Smooth subtle mouse parallax
+    const mouse = { x: 0, y: 0 };
+    const smoothMouse = { x: 0, y: 0 };
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = (e.clientX / (width || 1) - 0.5) * 2;
+      mouse.y = (e.clientY / (height || 1) - 0.5) * 2;
+    }, { passive: true });
+
+    // 32-second slow loop period
+    const LOOP_PERIOD = 32;
+    const startTime = performance.now();
+
+    function render(now) {
+      requestAnimationFrame(render);
+      const elapsed = (now - startTime) / 1000;
+      const t = (elapsed % LOOP_PERIOD) / LOOP_PERIOD * (Math.PI * 2);
+
+      // Gentle mouse tracking lag
+      smoothMouse.x += (mouse.x - smoothMouse.x) * 0.02;
+      smoothMouse.y += (mouse.y - smoothMouse.y) * 0.02;
+
+      // Deep rich obsidian black base
+      ctx.fillStyle = '#060608';
+      ctx.fillRect(0, 0, width, height);
+
+      // ── Layer 1: Flowing horizontal silk wave contours ──
+      const lineCount1 = 18;
+      const stepY = (height + 160) / lineCount1;
+      ctx.lineWidth = 0.85;
+
+      for (let i = 0; i < lineCount1; i++) {
+        const baseY = -80 + i * stepY;
+        const phase = (i / lineCount1) * Math.PI * 2;
+
+        // Faint silk opacities: 0.016 to 0.032 (extremely subtle, almost invisible)
+        // Single subtle red signature thread
+        const isAccent = (i === 6);
+        if (isAccent) {
+          ctx.strokeStyle = 'rgba(239, 68, 68, 0.026)';
+        } else {
+          ctx.strokeStyle = `rgba(245, 245, 247, ${0.016 + (i % 3) * 0.005})`;
+        }
+
+        ctx.beginPath();
+        const segments = 36;
+        const dx = width / segments;
+
+        for (let s = 0; s <= segments; s++) {
+          const x = s * dx;
+          // Dual harmonic slow wave distortion (20-40s loop)
+          const wave1 = Math.sin(x * 0.0015 + t + phase) * 26;
+          const wave2 = Math.cos(x * 0.003 - t * 0.7 + phase * 1.4) * 13;
+          const mouseDisplace = (Math.sin(x * 0.002 + t) * smoothMouse.y * 10) + (smoothMouse.x * 5);
+          const y = baseY + wave1 + wave2 + mouseDisplace;
+
+          if (s === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+        }
+        ctx.stroke();
+      }
+
+      // ── Layer 2: Angled shear contour lines (subtle moiré pattern) ──
+      const lineCount2 = 14;
+      const stepX = (width + 300) / lineCount2;
+
+      for (let j = 0; j < lineCount2; j++) {
+        const baseX = -150 + j * stepX;
+        const phase2 = (j / lineCount2) * Math.PI * 2;
+
+        ctx.strokeStyle = 'rgba(245, 245, 247, 0.014)';
+        ctx.beginPath();
+
+        const segmentsY = 28;
+        const dy = height / segmentsY;
+
+        for (let s = 0; s <= segmentsY; s++) {
+          const y = s * dy;
+          const waveX1 = Math.sin(y * 0.0018 - t * 0.8 + phase2) * 30;
+          const waveX2 = Math.cos(y * 0.0035 + t * 0.6 + phase2 * 1.2) * 15;
+          const shearX = (y / (height || 1)) * 70;
+          const x = baseX + waveX1 + waveX2 + shearX + (smoothMouse.x * 8);
+
+          if (s === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+        }
+        ctx.stroke();
+      }
+    }
+
+    requestAnimationFrame(render);
   }
-  animate();
 });
