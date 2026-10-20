@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="ATLAS — a classified internet discovery platform for mapping the hidden web.">
+  <meta name="description" content="ATLAS — Discover remarkable, hidden, and unusual websites across the internet.">
   <title>ATLAS / Internet Discovery Platform</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,244 +20,73 @@
   <div class="grain" aria-hidden="true"></div>
 
   <header class="site-header">
-    <a class="brand" href="#discover" aria-label="ATLAS home">
+    <a class="brand" href="#" aria-label="ATLAS home">
       <span class="brand-mark">[ATL]</span>
       <span class="brand-name">ATLAS<span>.</span></span>
       <span class="brand-sub">INTERNET DISCOVERY PLATFORM</span>
     </a>
-    <nav class="desktop-nav" aria-label="Primary navigation">
-      <a class="active" href="#discover">DISCOVER</a>
-      <a href="#about">ABOUT</a>
-      <a href="#collections">COLLECTIONS</a>
-      <a href="#signals">FEATURED</a>
-      <a href="#submit">SUBMIT</a>
-      <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">DARKFEED /</a>
-      <a href="https://www.instagram.com/" target="_blank" rel="noreferrer">DISPATCH /</a>
-    </nav>
     <div class="header-signal"><i></i> SIGNAL PATH / ACTIVE <b>SIGNALS</b></div>
     <button class="menu-toggle" type="button" aria-label="Open menu"
       aria-expanded="false"><span></span><span></span></button>
   </header>
 
   <main>
+    <!-- ── Hero ── -->
     <section class="hero" id="discover">
       <div class="hero-copy">
-        <p class="eyebrow"><span>01</span> DISCOVERY NETWORK / CLASSIFIED</p>
-        <h1>DISCOVER<br><em>THE</em><br><span class="typed" id="typed-text">UNSEEN</span><b class="caret"></b></h1>
-        <div class="hero-lower">
-          <p class="tagline">Discover.<br>Explore.<br>Collect.</p>
-          <p class="hero-description">Atlas is a curated platform for discovering remarkable websites, creative projects, digital art, and hidden corners of the internet.</p>
-        </div>
-        <a class="arrow-link" href="#collections">EXPLORE COLLECTIONS <span>→</span></a>
-      </div>
-      <div class="radar-wrap">
-        <div class="radar-label label-top">ATLAS // RADAR_ACTIVE</div>
-        <div class="radar" aria-label="Animated wireframe radar visualization">
-          <div class="radar-ring ring-one"></div>
-          <div class="radar-ring ring-two"></div>
-          <div class="radar-ring ring-three"></div>
-          <div class="radar-cross cross-x"></div>
-          <div class="radar-cross cross-y"></div>
-          <div class="radar-sweep"></div>
-          <div class="radar-dot"></div>
-        </div>
+        <h1>DISCOVER<br><em>THE</em><br><span class="typed" id="typed-text">OBSCURE</span><b class="caret"></b></h1>
+        <p class="hero-description">A curated platform for discovering remarkable websites, creative projects,
+          and hidden corners of the internet.</p>
+        <a class="cta-browse" href="#atlas-feed">Browse Atlas <span>→</span></a>
       </div>
     </section>
 
-    <section class="intro section-shell" id="about">
-      <div class="section-index"><span>02</span><span>ABOUT THE PLATFORM</span><span>EST. / CLASSIFIED</span></div>
-      <div class="intro-grid">
-        <h2>Signals are<br><span>more useful</span><br>when found.</h2>
-        <div class="intro-copy">
-          <p class="large-copy">ATLAS is an operator-grade discovery engine for mapping the forgotten, the buried, and
-            the unseen layers of the internet.</p>
-          <p>We maintain the space between the surface web and the deep unknown: curated collections of hidden sites,
-            dead drops, and signal intercepts that keep the network expanding.</p>
-          <div class="stat-row">
-            <div><strong>12K<span>+</span></strong><small>INDEXED<br>SIGNALS</small></div>
-            <div><strong>07</strong><small>ACTIVE<br>CRAWLERS</small></div>
-            <div><strong>∞</strong><small>LAYERS TO<br>DISCOVER</small></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="collections-section section-shell" id="collections">
-      <div class="collections-grid">
-        <div class="collections-left">
-          <div class="collections-header">
-            <h2 class="collections-title">Collections</h2>
-            <p class="collections-sub">Curated paths through the web.</p>
-          </div>
-          <div class="collections-preview" aria-hidden="true">
-            <div class="collections-preview-frame">
-              <img id="col-preview-img" src="assets/neal-fun-preview.jpg" alt="Collection preview" class="col-preview-image">
-              <div class="col-preview-info">
-                <span class="col-preview-title" id="col-preview-title">100 Websites Everyone Should Visit</span>
-              </div>
-            </div>
-          </div>
+    <!-- ── Discovery Interface ── -->
+    <section class="discovery" id="atlas-feed">
+      <div class="discovery-controls">
+        <div class="search-bar">
+          <svg class="search-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="8.5" cy="8.5" r="5.5" /><path d="M13 13l4 4" />
+          </svg>
+          <input type="text" id="search-input" placeholder="Search websites…" autocomplete="off" spellcheck="false">
         </div>
 
-        <div class="collections-right">
-          <div class="collections-list" role="list">
-            <a href="collection.html?id=100-websites" class="collection-item active" data-preview="assets/neal-fun-preview.jpg" data-title="100 Websites Everyone Should Visit" role="listitem">
-              <div class="col-item-body">
-                <h3 class="col-item-title">100 Websites Everyone Should Visit</h3>
-                <div class="col-item-meta">
-                  <span class="col-item-count">100 sites</span>
-                  <span class="col-item-sep">•</span>
-                  <span class="col-item-desc">Essential internet experiences</span>
-                </div>
-              </div>
-              <span class="col-item-arrow" aria-hidden="true">→</span>
-            </a>
+        <div class="filter-row" id="filter-row" role="tablist">
+          <!-- Populated by JS -->
+        </div>
 
-            <a href="collection.html?id=beautiful-portfolios" class="collection-item" data-preview="assets/window-swap-preview.jpg" data-title="Beautiful Portfolios" role="listitem">
-              <div class="col-item-body">
-                <h3 class="col-item-title">Beautiful Portfolios</h3>
-                <div class="col-item-meta">
-                  <span class="col-item-count">42 sites</span>
-                  <span class="col-item-sep">•</span>
-                  <span class="col-item-desc">Exceptional personal websites</span>
-                </div>
-              </div>
-              <span class="col-item-arrow" aria-hidden="true">→</span>
-            </a>
-
-            <a href="collection.html?id=browser-experiments" class="collection-item" data-preview="assets/pointer-pointer-preview.jpg" data-title="Browser Experiments" role="listitem">
-              <div class="col-item-body">
-                <h3 class="col-item-title">Browser Experiments</h3>
-                <div class="col-item-meta">
-                  <span class="col-item-count">31 sites</span>
-                  <span class="col-item-sep">•</span>
-                  <span class="col-item-desc">Interactive web experiments</span>
-                </div>
-              </div>
-              <span class="col-item-arrow" aria-hidden="true">→</span>
-            </a>
-
-            <a href="collection.html?id=the-weird-internet" class="collection-item" data-preview="assets/thispersondoesnotexist-preview.png" data-title="The Weird Internet" role="listitem">
-              <div class="col-item-body">
-                <h3 class="col-item-title">The Weird Internet</h3>
-                <div class="col-item-meta">
-                  <span class="col-item-count">56 sites</span>
-                  <span class="col-item-sep">•</span>
-                  <span class="col-item-desc">Strange, surprising, unforgettable</span>
-                </div>
-              </div>
-              <span class="col-item-arrow" aria-hidden="true">→</span>
-            </a>
-
-            <a href="collection.html?id=digital-museums" class="collection-item" data-preview="assets/zoomquilt-preview.jpg" data-title="Digital Museums" role="listitem">
-              <div class="col-item-body">
-                <h3 class="col-item-title">Digital Museums</h3>
-                <div class="col-item-meta">
-                  <span class="col-item-count">18 sites</span>
-                  <span class="col-item-sep">•</span>
-                  <span class="col-item-desc">Museums, archives and history</span>
-                </div>
-              </div>
-              <span class="col-item-arrow" aria-hidden="true">→</span>
-            </a>
-
-            <a href="collection.html?id=hidden-gems" class="collection-item" data-preview="assets/earth-nullschool-preview.jpg" data-title="Hidden Gems" role="listitem">
-              <div class="col-item-body">
-                <h3 class="col-item-title">Hidden Gems</h3>
-                <div class="col-item-meta">
-                  <span class="col-item-count">73 sites</span>
-                  <span class="col-item-sep">•</span>
-                  <span class="col-item-desc">Underrated websites worth exploring</span>
-                </div>
-              </div>
-              <span class="col-item-arrow" aria-hidden="true">→</span>
-            </a>
+        <div class="sort-row">
+          <div class="sort-options" role="tablist">
+            <button class="sort-btn active" data-sort="recent">Recent</button>
+            <button class="sort-btn" data-sort="popular">Popular</button>
+            <button class="sort-btn" data-sort="random">Random</button>
           </div>
+          <button class="random-btn" id="random-btn">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16">
+              <path d="M3 3l14 14M3 17L17 3" /><path d="M14 3h3v3M14 17h3v-3" />
+            </svg>
+            Random Discovery
+          </button>
         </div>
       </div>
-    </section>
 
-    <section class="featured-signals section-shell" id="signals">
-      <div class="featured-header">
-        <h2 class="featured-title">Featured <span>Signals</span></h2>
-        <p class="featured-sub">Curated websites worth exploring.</p>
+      <!-- Website listing -->
+      <div class="feed-list" id="feed-list" role="list">
+        <!-- Populated by JS -->
       </div>
-      <div class="featured-cards">
-        <a href="signal.html?id=SIG-001" class="signal-card">
-          <div class="signal-card-img">
-            <img src="assets/neal-fun-preview.jpg" alt="Neal.fun website preview" loading="lazy">
-            <span class="signal-card-cat">Interactive</span>
-          </div>
-          <div class="signal-card-body">
-            <div class="signal-card-name">Neal.fun <svg class="signal-card-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 11L11 5M11 5H6M11 5V10"/></svg></div>
-            <p class="signal-card-desc">Playful internet experiments and visual rabbit holes.</p>
-          </div>
-        </a>
-        <a href="signal.html?id=SIG-002" class="signal-card">
-          <div class="signal-card-img">
-            <img src="assets/radio-garden-preview.jpg" alt="Radio Garden website preview" loading="lazy">
-            <span class="signal-card-cat">Exploration</span>
-          </div>
-          <div class="signal-card-body">
-            <div class="signal-card-name">Radio Garden <svg class="signal-card-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 11L11 5M11 5H6M11 5V10"/></svg></div>
-            <p class="signal-card-desc">Spin the globe and listen to live radio stations worldwide.</p>
-          </div>
-        </a>
-        <a href="signal.html?id=SIG-003" class="signal-card">
-          <div class="signal-card-img">
-            <img src="assets/window-swap-preview.jpg" alt="Window Swap website preview" loading="lazy">
-            <span class="signal-card-cat">Experience</span>
-          </div>
-          <div class="signal-card-body">
-            <div class="signal-card-name">Window Swap <svg class="signal-card-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 11L11 5M11 5H6M11 5V10"/></svg></div>
-            <p class="signal-card-desc">Look through someone else's window, anywhere on Earth.</p>
-          </div>
-        </a>
-        <a href="signal.html?id=SIG-004" class="signal-card">
-          <div class="signal-card-img">
-            <img src="assets/zoomquilt-preview.jpg" alt="Zoomquilt website preview" loading="lazy">
-            <span class="signal-card-cat">Art</span>
-          </div>
-          <div class="signal-card-body">
-            <div class="signal-card-name">Zoomquilt <svg class="signal-card-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 11L11 5M11 5H6M11 5V10"/></svg></div>
-            <p class="signal-card-desc">An infinitely zooming collaborative painting.</p>
-          </div>
-        </a>
-        <a href="signal.html?id=SIG-005" class="signal-card">
-          <div class="signal-card-img">
-            <img src="assets/pointer-pointer-preview.jpg" alt="Pointer Pointer website preview" loading="lazy">
-            <span class="signal-card-cat">Game</span>
-          </div>
-          <div class="signal-card-body">
-            <div class="signal-card-name">Pointer Pointer <svg class="signal-card-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 11L11 5M11 5H6M11 5V10"/></svg></div>
-            <p class="signal-card-desc">Move your cursor — a photo will point right at it.</p>
-          </div>
-        </a>
-        <a href="signal.html?id=SIG-006" class="signal-card">
-          <div class="signal-card-img">
-            <img src="assets/thispersondoesnotexist-preview.png" alt="This Person Does Not Exist website preview" loading="lazy">
-            <span class="signal-card-cat">AI</span>
-          </div>
-          <div class="signal-card-body">
-            <div class="signal-card-name">This Person Does Not Exist <svg class="signal-card-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 11L11 5M11 5H6M11 5V10"/></svg></div>
-            <p class="signal-card-desc">AI-generated human faces that never existed.</p>
-          </div>
-        </a>
-      </div>
-    </section>
 
-    <section class="join section-shell" id="submit">
-      <div class="join-mark">[ATL]</div>
-      <p class="eyebrow"><span>06</span> OPEN CHANNEL / ENCRYPTED</p>
-      <h2>Submit your<br><em>signal.</em></h2>
-      <p class="join-copy">Found a dead link that leads somewhere? A forgotten archive? A signal no one else has mapped?
-        Drop your coordinates. The next discovery starts with you.</p>
-      <a class="join-button" href="mailto:signals@atlas.net">SUBMIT TO ATLAS <span>↗</span></a>
+      <div class="feed-empty" id="feed-empty" style="display:none;">
+        <p>No websites match your search.</p>
+      </div>
     </section>
   </main>
 
-  <footer><span>© 2026 ATLAS / INTERNET DISCOVERY PLATFORM</span><span>BUILT WITH OBSESSION <b>●</b></span><span>DEPTH ∞
-      / LAYER UNKNOWN</span></footer>
+  <footer>
+    <span>© 2026 ATLAS / INTERNET DISCOVERY PLATFORM</span>
+    <span>BUILT WITH OBSESSION <b>●</b></span>
+    <span>DEPTH ∞ / LAYER UNKNOWN</span>
+  </footer>
+
   <script type="module" src="script.js"></script>
 </body>
 

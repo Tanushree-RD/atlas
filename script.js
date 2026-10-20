@@ -1,6 +1,9 @@
+import { SIGNALS, FILTER_CATEGORIES } from './signals-data.js';
+
 document.addEventListener('DOMContentLoaded', () => {
+  // ── Typed Hero Animation ────────────────────────────
   const typed = document.querySelector('#typed-text');
-  const words = ['HIDDEN', 'UNSEEN', 'OBSCURE', 'WEIRD'];
+  const words = ['OBSCURE', 'HIDDEN', 'WEIRD', 'UNSEEN', 'CURIOUS'];
   let word = 0;
   let position = words[0].length;
   let deleting = true;
@@ -31,56 +34,145 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   setTimeout(typeLoop, 1900);
 
+  // ── Mobile Menu ─────────────────────────────────────
   const menu = document.querySelector('.menu-toggle');
-  const nav = document.querySelector('.desktop-nav');
   menu?.addEventListener('click', () => {
-    const isOpen = nav.classList.toggle('open');
-    menu.setAttribute('aria-expanded', String(isOpen));
+    // No nav links on this simplified page — placeholder for future use
   });
-  nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
-    nav.classList.remove('open');
-    menu?.setAttribute('aria-expanded', 'false');
-  }));
 
-  const sections = [...document.querySelectorAll('main section[id]')];
-  const links = [...document.querySelectorAll('.desktop-nav a')];
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      links.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`));
+  // ── Discovery: State ────────────────────────────────
+  let activeFilter = 'all';
+  let activeSort = 'recent';
+  let searchQuery = '';
+
+  // ── Discovery: Build Filters ────────────────────────
+  const filterRow = document.getElementById('filter-row');
+  const extendedCategories = [
+    ...FILTER_CATEGORIES.slice(0, 1), // ALL
+    { key: 'interactive', label: 'INTERACTIVE' },
+    { key: 'portfolio', label: 'PORTFOLIO' },
+    { key: 'ai', label: 'AI' },
+    { key: 'tool', label: 'TOOLS' },
+    { key: 'art', label: 'ART' },
+    { key: 'game', label: 'GAMES' },
+    { key: 'opensource', label: 'OPEN SOURCE' },
+    { key: 'weird', label: 'WEIRD' },
+    { key: 'retro', label: 'RETRO' },
+    { key: 'experiment', label: 'EXPERIMENTAL' }
+  ];
+
+  extendedCategories.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = `filter-btn${cat.key === 'all' ? ' active' : ''}`;
+    btn.textContent = cat.label;
+    btn.dataset.filter = cat.key;
+    btn.setAttribute('role', 'tab');
+    btn.setAttribute('aria-selected', cat.key === 'all' ? 'true' : 'false');
+    btn.addEventListener('click', () => {
+      activeFilter = cat.key;
+      document.querySelectorAll('.filter-btn').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+      renderFeed();
     });
-  }, { rootMargin: '-35% 0px -55% 0px' });
-  sections.forEach((section) => observer.observe(section));
-
-  // Collections — Interactive hover preview
-  const collectionItems = document.querySelectorAll('.collection-item');
-  const previewImg = document.querySelector('#col-preview-img');
-  const previewTitle = document.querySelector('#col-preview-title');
-
-  collectionItems.forEach((item) => {
-    const handleActive = () => {
-      collectionItems.forEach((c) => c.classList.remove('active'));
-      item.classList.add('active');
-
-      const previewSrc = item.getAttribute('data-preview');
-      const title = item.getAttribute('data-title');
-
-      if (previewImg && previewSrc && previewImg.getAttribute('src') !== previewSrc) {
-        previewImg.style.opacity = '0.35';
-        setTimeout(() => {
-          previewImg.src = previewSrc;
-          previewImg.style.opacity = '1';
-        }, 90);
-      }
-      if (previewTitle && title) {
-        previewTitle.textContent = title;
-      }
-    };
-
-    item.addEventListener('mouseenter', handleActive);
-    item.addEventListener('focus', handleActive);
+    filterRow.appendChild(btn);
   });
 
+  // ── Discovery: Sort Buttons ─────────────────────────
+  document.querySelectorAll('.sort-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeSort = btn.dataset.sort;
+      document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderFeed();
+    });
+  });
+
+  // ── Discovery: Search ───────────────────────────────
+  const searchInput = document.getElementById('search-input');
+  searchInput.addEventListener('input', () => {
+    searchQuery = searchInput.value.trim().toLowerCase();
+    renderFeed();
+  });
+
+  // ── Discovery: Random Button ────────────────────────
+  document.getElementById('random-btn').addEventListener('click', () => {
+    const randomSignal = SIGNALS[Math.floor(Math.random() * SIGNALS.length)];
+    window.open(`signal.html?id=${randomSignal.id}`, '_self');
+  });
+
+  // ── Discovery: Render Feed ──────────────────────────
+  const feedList = document.getElementById('feed-list');
+  const feedEmpty = document.getElementById('feed-empty');
+
+  function getFilteredSignals() {
+    let filtered = [...SIGNALS];
+
+    // Category filter
+    if (activeFilter !== 'all') {
+      filtered = filtered.filter(s => {
+        const cats = s.filterCategories || [];
+        const mainCat = (s.category || '').toLowerCase();
+        // Check filterCategories array and main category
+        return cats.includes(activeFilter) || mainCat === activeFilter;
+      });
+    }
+
+    // Search filter
+    if (searchQuery) {
+      filtered = filtered.filter(s => {
+        const haystack = `${s.name} ${s.description} ${s.category} ${(s.tags || []).join(' ')}`.toLowerCase();
+        return haystack.includes(searchQuery);
+      });
+    }
+
+    // Sort
+    if (activeSort === 'popular') {
+      filtered.sort((a, b) => (b.metadata?.score || 0) - (a.metadata?.score || 0));
+    } else if (activeSort === 'random') {
+      for (let i = filtered.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
+      }
+    }
+    // 'recent' keeps original order (default)
+
+    return filtered;
+  }
+
+  function renderFeed() {
+    const signals = getFilteredSignals();
+    feedList.innerHTML = '';
+
+    if (signals.length === 0) {
+      feedEmpty.style.display = '';
+      return;
+    }
+    feedEmpty.style.display = 'none';
+
+    signals.forEach(signal => {
+      const a = document.createElement('a');
+      a.className = 'feed-item';
+      a.href = `signal.html?id=${signal.id}`;
+      a.setAttribute('role', 'listitem');
+      a.innerHTML = `
+        <div class="feed-item-info">
+          <span class="feed-item-name">${signal.name}</span>
+          <span class="feed-item-desc">${signal.description}</span>
+        </div>
+        <span class="feed-item-cat">${signal.category}</span>
+        <span class="feed-item-arrow">→</span>
+      `;
+      feedList.appendChild(a);
+    });
+  }
+
+  renderFeed();
+
+  // ── Three.js Background ─────────────────────────────
   if (typeof THREE === 'undefined') return;
   const canvas = document.querySelector('#bg-canvas');
   const scene = new THREE.Scene();
