@@ -3,7 +3,7 @@ import { SIGNALS, FILTER_CATEGORIES } from './signals-data.js';
 document.addEventListener('DOMContentLoaded', () => {
   // ── Typed Hero Animation ────────────────────────────
   const typed = document.querySelector('#typed-text');
-  const words = ['Obscure', 'Hidden', 'Weird', 'Unseen', 'Curious'];
+  const words = ['OBSCURE', 'HIDDEN', 'WEIRD', 'UNSEEN', 'CURIOUS'];
   let word = 0;
   let position = words[0].length;
   let deleting = true;
@@ -268,121 +268,253 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderFeed();
 
-  // ── Animated Luxury Background (Silk / Flowing Contour Moiré) ──
+  // ── Luxury Animated Background ──────────────────────
   const canvas = document.querySelector('#bg-canvas');
   if (canvas) {
-    const ctx = canvas.getContext('2d');
-    let width = 0;
-    let height = 0;
-    let dpr = 1;
+    let mouse = { x: 0.5, y: 0.45 };
+    let targetMouse = { x: 0.5, y: 0.45 };
+    let hasMoved = false;
 
-    function resize() {
-      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.scale(dpr, dpr);
-    }
-    resize();
-    window.addEventListener('resize', resize, { passive: true });
-
-    // Smooth subtle mouse parallax
-    const mouse = { x: 0, y: 0 };
-    const smoothMouse = { x: 0, y: 0 };
     window.addEventListener('mousemove', (e) => {
-      mouse.x = (e.clientX / (width || 1) - 0.5) * 2;
-      mouse.y = (e.clientY / (height || 1) - 0.5) * 2;
+      hasMoved = true;
+      targetMouse.x = e.clientX / window.innerWidth;
+      targetMouse.y = 1.0 - (e.clientY / window.innerHeight);
+      document.documentElement.style.setProperty('--spot-x', `${e.clientX}px`);
+      document.documentElement.style.setProperty('--spot-y', `${e.clientY}px`);
     }, { passive: true });
 
-    // 32-second slow loop period
-    const LOOP_PERIOD = 32;
+    const gl = canvas.getContext('webgl', {
+      antialias: true,
+      alpha: false,
+      powerPreference: 'low-power'
+    });
+
+    if (gl) {
+      initWebGLBackground(gl, canvas, mouse, targetMouse, () => hasMoved);
+    } else {
+      init2DBackground(canvas, mouse, targetMouse, () => hasMoved);
+    }
+  }
+
+  function initWebGLBackground(gl, canvas, mouse, targetMouse, getHasMoved) {
+    const vsSource = `
+      attribute vec2 a_pos;
+      void main() {
+        gl_Position = vec4(a_pos, 0.0, 1.0);
+      }
+    `;
+
+    const fsSource = `
+      #ifdef GL_ES
+      precision highp float;
+      #endif
+      uniform vec2 u_res;
+      uniform float u_time;
+      uniform vec2 u_mouse;
+
+      void main() {
+        vec2 st = gl_FragCoord.xy / u_res.xy;
+        float aspect = u_res.x / u_res.y;
+        vec2 p = st;
+        p.x *= aspect;
+
+        vec2 m = u_mouse;
+        m.x *= aspect;
+
+        // Extremely slow and premium breathing rate
+        float t = u_time * 0.032;
+
+        // Subtle organic dark silk wave distortion
+        float w1 = sin(p.y * 1.8 + t * 0.75) * 0.055;
+        float w2 = cos(p.x * 1.4 - t * 0.60) * 0.055;
+        vec2 wp = p + vec2(w1, w2);
+
+        // Drifting organic dark red / oxblood mesh centers
+        vec2 c1 = vec2((0.32 + 0.16 * sin(t * 0.70)) * aspect, 0.68 + 0.12 * cos(t * 0.55));
+        vec2 c2 = vec2((0.74 + 0.15 * cos(t * 0.50 + 1.4)) * aspect, 0.38 + 0.14 * sin(t * 0.65 + 0.8));
+        vec2 c3 = vec2((0.48 + 0.18 * sin(t * 0.40 + 2.6)) * aspect, 0.80 + 0.10 * cos(t * 0.45 + 1.9));
+        vec2 c4 = vec2((0.18 + 0.12 * cos(t * 0.60 + 3.2)) * aspect, 0.30 + 0.12 * sin(t * 0.35 + 2.2));
+
+        // Broad, soft radial falloffs
+        float d1 = length(wp - c1);
+        float d2 = length(wp - c2);
+        float d3 = length(wp - c3);
+        float d4 = length(wp - c4);
+
+        float m1 = smoothstep(1.15, 0.0, d1);
+        float m2 = smoothstep(1.05, 0.0, d2);
+        float m3 = smoothstep(0.90, 0.0, d3);
+        float m4 = smoothstep(0.80, 0.0, d4);
+
+        // Gentle spotlight tracking mouse
+        float mDist = length(p - m);
+        float spot = smoothstep(0.80, 0.0, mDist);
+
+        // Color scheme: Almost black void with subtle deep wine / dark red highlights
+        vec3 cVoid     = vec3(0.024, 0.024, 0.028); // #060608 deep obsidian
+        vec3 cWine     = vec3(0.095, 0.010, 0.016); // subtle dark wine
+        vec3 cGarnet   = vec3(0.145, 0.015, 0.025); // deep garnet
+        vec3 cCrimson  = vec3(0.195, 0.022, 0.035); // dark ruby highlight
+        vec3 cSpot     = vec3(0.085, 0.010, 0.015); // gentle cursor sheen
+
+        // Composite mesh colors
+        vec3 col = cVoid;
+        col += cWine    * (m1 * 0.70);
+        col += cGarnet  * (m2 * 0.60);
+        col += cCrimson * (m3 * 0.45);
+        col += cWine    * (m4 * 0.40);
+        col += cSpot    * (spot * 0.40);
+
+        // Very subtle contour depth
+        float wave = sin((wp.x * 2.5 + wp.y * 3.0 + t) * 3.14159) * 0.5 + 0.5;
+        col += cCrimson * (wave * 0.018);
+
+        // Soft internal vignette
+        vec2 vCoord = (st - 0.5) * vec2(aspect, 1.0);
+        float vig = smoothstep(1.3, 0.35, length(vCoord));
+        col *= (0.50 + 0.50 * vig);
+
+        gl_FragColor = vec4(col, 1.0);
+      }
+    `;
+
+    function createShader(type, src) {
+      const s = gl.createShader(type);
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+        console.warn(gl.getShaderInfoLog(s));
+        gl.deleteShader(s);
+        return null;
+      }
+      return s;
+    }
+
+    const vs = createShader(gl.VERTEX_SHADER, vsSource);
+    const fs = createShader(gl.FRAGMENT_SHADER, fsSource);
+    if (!vs || !fs) {
+      init2DBackground(canvas, mouse, targetMouse, getHasMoved);
+      return;
+    }
+
+    const program = gl.createProgram();
+    gl.attachShader(program, vs);
+    gl.attachShader(program, fs);
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      console.warn(gl.getProgramInfoLog(program));
+      init2DBackground(canvas, mouse, targetMouse, getHasMoved);
+      return;
+    }
+
+    const posBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+      -1, -1,
+       3, -1,
+      -1,  3
+    ]), gl.STATIC_DRAW);
+
+    const aPos = gl.getAttribLocation(program, 'a_pos');
+    const uRes = gl.getUniformLocation(program, 'u_res');
+    const uTime = gl.getUniformLocation(program, 'u_time');
+    const uMouse = gl.getUniformLocation(program, 'u_mouse');
+
+    function resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      const w = Math.round(window.innerWidth * dpr);
+      const h = Math.round(window.innerHeight * dpr);
+      if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w;
+        canvas.height = h;
+        gl.viewport(0, 0, w, h);
+      }
+    }
+    window.addEventListener('resize', resize, { passive: true });
+    resize();
+
     const startTime = performance.now();
 
     function render(now) {
       requestAnimationFrame(render);
-      const elapsed = (now - startTime) / 1000;
-      const t = (elapsed % LOOP_PERIOD) / LOOP_PERIOD * (Math.PI * 2);
+      const elapsed = (now - startTime) * 0.001;
 
-      // Gentle mouse tracking lag
-      smoothMouse.x += (mouse.x - smoothMouse.x) * 0.02;
-      smoothMouse.y += (mouse.y - smoothMouse.y) * 0.02;
-
-      // Deep rich obsidian black base
-      ctx.fillStyle = '#060608';
-      ctx.fillRect(0, 0, width, height);
-
-      // ── Layer 1: Flowing horizontal silk wave contours ──
-      const lineCount1 = 18;
-      const stepY = (height + 160) / lineCount1;
-      ctx.lineWidth = 0.85;
-
-      for (let i = 0; i < lineCount1; i++) {
-        const baseY = -80 + i * stepY;
-        const phase = (i / lineCount1) * Math.PI * 2;
-
-        // Faint silk opacities: 0.016 to 0.032 (extremely subtle, almost invisible)
-        // Single subtle red signature thread
-        const isAccent = (i === 6);
-        if (isAccent) {
-          ctx.strokeStyle = 'rgba(239, 68, 68, 0.026)';
-        } else {
-          ctx.strokeStyle = `rgba(245, 245, 247, ${0.016 + (i % 3) * 0.005})`;
-        }
-
-        ctx.beginPath();
-        const segments = 36;
-        const dx = width / segments;
-
-        for (let s = 0; s <= segments; s++) {
-          const x = s * dx;
-          // Dual harmonic slow wave distortion (20-40s loop)
-          const wave1 = Math.sin(x * 0.0015 + t + phase) * 26;
-          const wave2 = Math.cos(x * 0.003 - t * 0.7 + phase * 1.4) * 13;
-          const mouseDisplace = (Math.sin(x * 0.002 + t) * smoothMouse.y * 10) + (smoothMouse.x * 5);
-          const y = baseY + wave1 + wave2 + mouseDisplace;
-
-          if (s === 0) {
-            ctx.moveTo(x, y);
-          } else {
-            ctx.lineTo(x, y);
-          }
-        }
-        ctx.stroke();
+      if (!getHasMoved()) {
+        targetMouse.x = 0.5 + 0.08 * Math.sin(elapsed * 0.4);
+        targetMouse.y = 0.5 + 0.06 * Math.cos(elapsed * 0.35);
       }
 
-      // ── Layer 2: Angled shear contour lines (subtle moiré pattern) ──
-      const lineCount2 = 14;
-      const stepX = (width + 300) / lineCount2;
+      mouse.x += (targetMouse.x - mouse.x) * 0.03;
+      mouse.y += (targetMouse.y - mouse.y) * 0.03;
 
-      for (let j = 0; j < lineCount2; j++) {
-        const baseX = -150 + j * stepX;
-        const phase2 = (j / lineCount2) * Math.PI * 2;
+      gl.useProgram(program);
+      gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
+      gl.enableVertexAttribArray(aPos);
+      gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
 
-        ctx.strokeStyle = 'rgba(245, 245, 247, 0.014)';
-        ctx.beginPath();
+      gl.uniform2f(uRes, canvas.width, canvas.height);
+      gl.uniform1f(uTime, elapsed);
+      gl.uniform2f(uMouse, mouse.x, mouse.y);
 
-        const segmentsY = 28;
-        const dy = height / segmentsY;
-
-        for (let s = 0; s <= segmentsY; s++) {
-          const y = s * dy;
-          const waveX1 = Math.sin(y * 0.0018 - t * 0.8 + phase2) * 30;
-          const waveX2 = Math.cos(y * 0.0035 + t * 0.6 + phase2 * 1.2) * 15;
-          const shearX = (y / (height || 1)) * 70;
-          const x = baseX + waveX1 + waveX2 + shearX + (smoothMouse.x * 8);
-
-          if (s === 0) {
-            ctx.moveTo(x, y);
-          } else {
-            ctx.lineTo(x, y);
-          }
-        }
-        ctx.stroke();
-      }
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
     }
+    requestAnimationFrame(render);
+  }
 
+  function init2DBackground(canvas, mouse, targetMouse, getHasMoved) {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize, { passive: true });
+    resize();
+
+    const startTime = performance.now();
+    function render(now) {
+      requestAnimationFrame(render);
+      const elapsed = (now - startTime) * 0.001;
+      const t = elapsed * 0.032;
+      const w = canvas.width;
+      const h = canvas.height;
+
+      if (!getHasMoved()) {
+        targetMouse.x = 0.5 + 0.08 * Math.sin(elapsed * 0.4);
+        targetMouse.y = 0.5 + 0.06 * Math.cos(elapsed * 0.35);
+      }
+
+      mouse.x += (targetMouse.x - mouse.x) * 0.03;
+      mouse.y += (targetMouse.y - mouse.y) * 0.03;
+
+      ctx.fillStyle = '#060608';
+      ctx.fillRect(0, 0, w, h);
+
+      const x1 = (0.32 + 0.16 * Math.sin(t * 0.7)) * w;
+      const y1 = (0.68 + 0.12 * Math.cos(t * 0.55)) * h;
+      const g1 = ctx.createRadialGradient(x1, y1, 0, x1, y1, w * 0.55);
+      g1.addColorStop(0, 'rgba(160, 20, 36, 0.28)');
+      g1.addColorStop(1, 'rgba(6, 6, 8, 0)');
+      ctx.fillStyle = g1;
+      ctx.fillRect(0, 0, w, h);
+
+      const x2 = (0.74 + 0.15 * Math.cos(t * 0.5 + 1.4)) * w;
+      const y2 = (0.38 + 0.14 * Math.sin(t * 0.65 + 0.8)) * h;
+      const g2 = ctx.createRadialGradient(x2, y2, 0, x2, y2, w * 0.5);
+      g2.addColorStop(0, 'rgba(210, 28, 48, 0.22)');
+      g2.addColorStop(1, 'rgba(6, 6, 8, 0)');
+      ctx.fillStyle = g2;
+      ctx.fillRect(0, 0, w, h);
+
+      const sx = mouse.x * w;
+      const sy = (1.0 - mouse.y) * h;
+      const gs = ctx.createRadialGradient(sx, sy, 0, sx, sy, 500);
+      gs.addColorStop(0, 'rgba(239, 68, 68, 0.10)');
+      gs.addColorStop(1, 'rgba(6, 6, 8, 0)');
+      ctx.fillStyle = gs;
+      ctx.fillRect(0, 0, w, h);
+    }
     requestAnimationFrame(render);
   }
 });
