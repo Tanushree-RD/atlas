@@ -98,10 +98,48 @@ document.addEventListener('DOMContentLoaded', () => {
     renderFeed();
   });
 
+  // ── Discovery: Expandable Row Accordion State ───────
+  let expandedSignalId = null;
+
+  function toggleRow(signalId) {
+    if (expandedSignalId === signalId) {
+      collapseRow(signalId);
+      expandedSignalId = null;
+    } else {
+      if (expandedSignalId) {
+        collapseRow(expandedSignalId);
+      }
+      expandRow(signalId);
+      expandedSignalId = signalId;
+    }
+  }
+
+  function expandRow(signalId) {
+    const row = document.querySelector(`.feed-row[data-id="${signalId}"]`);
+    if (!row) return;
+    row.classList.add('is-expanded');
+    const btn = row.querySelector('.feed-row-header');
+    btn?.setAttribute('aria-expanded', 'true');
+  }
+
+  function collapseRow(signalId) {
+    const row = document.querySelector(`.feed-row[data-id="${signalId}"]`);
+    if (!row) return;
+    row.classList.remove('is-expanded');
+    const btn = row.querySelector('.feed-row-header');
+    btn?.setAttribute('aria-expanded', 'false');
+  }
+
   // ── Discovery: Random Button ────────────────────────
   document.getElementById('random-btn').addEventListener('click', () => {
-    const randomSignal = SIGNALS[Math.floor(Math.random() * SIGNALS.length)];
-    window.open(`signal.html?id=${randomSignal.id}`, '_self');
+    const signals = getFilteredSignals();
+    if (!signals.length) return;
+    const randomSignal = signals[Math.floor(Math.random() * signals.length)];
+    toggleRow(randomSignal.id);
+    const row = document.querySelector(`.feed-row[data-id="${randomSignal.id}"]`);
+    if (row) {
+      row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
   });
 
   // ── Discovery: Render Feed ──────────────────────────
@@ -116,7 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
       filtered = filtered.filter(s => {
         const cats = s.filterCategories || [];
         const mainCat = (s.category || '').toLowerCase();
-        // Check filterCategories array and main category
         return cats.includes(activeFilter) || mainCat === activeFilter;
       });
     }
@@ -156,25 +193,76 @@ document.addEventListener('DOMContentLoaded', () => {
     signals.forEach((signal, i) => {
       const idx = String(i + 1).padStart(2, '0');
       const year = signal.year || '';
-      const a = document.createElement('a');
-      a.className = 'feed-item';
-      a.href = `signal.html?id=${signal.id}`;
-      a.setAttribute('role', 'listitem');
-      a.innerHTML = `
-        <span class="feed-item-index">${idx}</span>
-        <div class="feed-item-info">
-          <span class="feed-item-name">${signal.name}</span>
-          <span class="feed-item-desc">${signal.description}</span>
+      const isExpanded = signal.id === expandedSignalId;
+      const largerDesc = signal.largerDescription || signal.fullDescription || signal.description;
+      const whyPoints = (signal.whyVisit || (signal.bestFor ? signal.bestFor.slice(0, 3) : []));
+      const tags = (signal.tags || []).slice(0, 4);
+
+      const row = document.createElement('article');
+      row.className = `feed-row${isExpanded ? ' is-expanded' : ''}`;
+      row.dataset.id = signal.id;
+      row.setAttribute('role', 'listitem');
+
+      row.innerHTML = `
+        <button class="feed-row-header" type="button" aria-expanded="${isExpanded ? 'true' : 'false'}" aria-controls="panel-${signal.id}" aria-label="Toggle details for ${signal.name}">
+          <span class="feed-item-index">${idx}</span>
+          <div class="feed-item-info">
+            <span class="feed-item-name">${signal.name}</span>
+            <span class="feed-item-desc">${signal.description}</span>
+          </div>
+          <span class="feed-item-cat">${signal.category}</span>
+          <span class="feed-item-year">${year}</span>
+          <span class="feed-item-toggle" aria-hidden="true">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75">
+              <path d="M4 6l4 4 4-4"/>
+            </svg>
+          </span>
+        </button>
+
+        <div class="feed-row-panel" id="panel-${signal.id}" role="region" aria-label="${signal.name} details">
+          <div class="panel-inner">
+            <div class="panel-grid">
+              <div class="panel-media">
+                <img class="panel-img" src="${signal.screenshot || ''}" alt="${signal.name} screenshot" loading="lazy">
+                <span class="panel-reticle tl"></span>
+                <span class="panel-reticle tr"></span>
+                <span class="panel-reticle bl"></span>
+                <span class="panel-reticle br"></span>
+              </div>
+
+              <div class="panel-content">
+                <div class="panel-tags-row">
+                  <span class="panel-cat-badge">${(signal.category || 'SIGNAL').toUpperCase()}</span>
+                  ${tags.map(t => `<span class="panel-tag">${t.startsWith('#') ? t : '#' + t}</span>`).join('')}
+                </div>
+
+                <p class="panel-desc">${largerDesc}</p>
+
+                <div class="panel-why">
+                  <span class="panel-why-heading">WHY VISIT</span>
+                  <ul class="panel-why-list">
+                    ${whyPoints.map(p => `<li>${p}</li>`).join('')}
+                  </ul>
+                </div>
+
+                <div class="panel-actions">
+                  <a class="panel-visit-btn" href="${signal.url}" target="_blank" rel="noopener noreferrer" aria-label="Visit ${signal.name} in new tab">
+                    Visit Website <span>↗</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <span class="feed-item-cat">${signal.category}</span>
-        <span class="feed-item-year">${year}</span>
-        <span class="feed-item-arrow">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M5 11L11 5M11 5H6M11 5V10"/>
-          </svg>
-        </span>
       `;
-      feedList.appendChild(a);
+
+      // Toggle inline accordion on header click
+      const headerBtn = row.querySelector('.feed-row-header');
+      headerBtn.addEventListener('click', () => {
+        toggleRow(signal.id);
+      });
+
+      feedList.appendChild(row);
     });
   }
 

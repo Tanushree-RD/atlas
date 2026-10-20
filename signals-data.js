@@ -7,6 +7,12 @@ export const SIGNALS = [
     name: 'Neal.fun',
     tagline: 'Playful interactive experiments that make learning feel like playing.',
     description: 'Playful interactive experiments and educational web experiences.',
+    largerDescription: 'Neal.fun is a collection of interactive web experiments created by Neal Agarwal. Each project transforms complex topics — from the size of the universe to the history of money — into intuitive, visually rich experiences you can explore in your browser. No downloads, no sign-ups. Just click and discover.',
+    whyVisit: [
+      'Explore interactive visual experiments from space scale to deep ocean depths',
+      'Zero downloads, sign-ups, or ads — instant browser-based wonder',
+      'Thoughtful creative design that transforms learning into play'
+    ],
     screenshot: 'assets/neal-fun-preview.jpg',
     url: 'https://neal.fun',
     creator: 'Neal Agarwal',
@@ -39,6 +45,12 @@ export const SIGNALS = [
     name: 'Radio Garden',
     tagline: 'Listen to live radio stations broadcast from anywhere on planet Earth.',
     description: 'Listen to live radio stations anywhere on Earth via an interactive globe.',
+    largerDescription: 'Radio Garden allows listeners to explore processes of broadcasting and hearing by interacting with a 3D globe covered with live radio signals. Spin the planet and drop in on local transmissions across thousands of cities in real time.',
+    whyVisit: [
+      'Tune into live FM and community broadcasts from thousands of cities worldwide',
+      'Spin an interactive 3D globe to discover local sounds across cultures',
+      'Perfect ambient soundtrack for focus, remote work, or exploration'
+    ],
     screenshot: 'assets/radio-garden-preview.jpg',
     url: 'https://radio.garden',
     creator: 'Studio Puckey & Moniker',
@@ -71,6 +83,12 @@ export const SIGNALS = [
     name: 'Window Swap',
     tagline: "Open a random stranger's window from around the world.",
     description: "Open a random stranger's window from around the world.",
+    largerDescription: "Window Swap is a quarantine project turned global phenomenon that lets you gaze out of someone else's window somewhere in the world, accompanied by ambient audio recorded at the scene. It offers an authentic, unedited window into daily life across continents.",
+    whyVisit: [
+      'Look through real, unedited windows submitted by people around the world',
+      'Relax with authentic natural ambient audio recorded at each location',
+      'A serene visual sanctuary free from algorithms, feeds, and notifications'
+    ],
     screenshot: 'assets/window-swap-preview.jpg',
     url: 'https://www.window-swap.com',
     creator: 'Sonali Ranjit & Vaishnav Balasubramaniam',
@@ -103,6 +121,12 @@ export const SIGNALS = [
     name: 'Zoomquilt',
     tagline: 'Infinite collaborative zoom artwork with surreal transitions.',
     description: 'Infinite zoom artwork with surreal transitions.',
+    largerDescription: 'Zoomquilt is an ongoing collaborative digital painting project initiated in 2004 where illustrators from around the world connect intricate surreal scenes into a seamless, endlessly zooming fantasy loop. It remains one of the most legendary early internet art experiments.',
+    whyVisit: [
+      'Endlessly zooming collaborative digital artwork maintained since 2004',
+      'Hundreds of hand-painted surreal worlds linked seamlessly together',
+      'Hypnotic visual meditation with smooth adjustable navigation speed'
+    ],
     screenshot: 'assets/zoomquilt-preview.jpg',
     url: 'https://zoomquilt.org',
     creator: 'Nikolaus Baumgarten & Illustrators',
@@ -135,6 +159,12 @@ export const SIGNALS = [
     name: 'Pointer Pointer',
     tagline: 'Finds a photo pointing exactly at your cursor in real time.',
     description: 'Finds a photo pointing exactly at your cursor.',
+    largerDescription: 'Place your cursor anywhere on the screen and stay still. Within moments, the page locates an archived photograph of a person pointing their finger with uncanny accuracy directly at that spot. An early viral masterpiece of playful digital serendipity.',
+    whyVisit: [
+      'Uncanny algorithmic image matching to your exact cursor coordinates',
+      'Hundreds of quirky, deadpan vintage and candid photos',
+      'A hilarious, iconic artifact of early creative web culture'
+    ],
     screenshot: 'assets/pointer-pointer-preview.jpg',
     url: 'https://pointerpointer.com',
     creator: 'Studio Moniker',
@@ -167,6 +197,12 @@ export const SIGNALS = [
     name: 'This Person Does Not Exist',
     tagline: 'AI-generated photorealistic human portraits that have never existed.',
     description: "AI-generated human faces that don't exist.",
+    largerDescription: 'Every time you refresh, a generative adversarial network synthesizes a hyper-realistic human portrait from pure computational noise. None of the people shown have ever lived. A landmark demonstration of generative neural networks and synthetic realism.',
+    whyVisit: [
+      'Photorealistic portrait synthesis on every single page reload',
+      'Landmark historical milestone in neural network generative AI',
+      'Fascinating philosophical reflection on digital identity'
+    ],
     screenshot: 'assets/thispersondoesnotexist-preview.png',
     url: 'https://thispersondoesnotexist.com',
     creator: 'Philip Wang (StyleGAN by NVIDIA)',
@@ -199,6 +235,12 @@ export const SIGNALS = [
     name: 'Earth Nullschool',
     tagline: 'Mesmerizing real-time interactive visualization of global weather and currents.',
     description: 'Real-time interactive visualization of global weather and ocean currents.',
+    largerDescription: 'A supercomputing visualizer that renders live global weather conditions, ocean currents, particulate matter, and atmospheric streams onto an interactive rotatable globe in real time. Transforms dry meteorological numbers into hypnotic living art.',
+    whyVisit: [
+      'Live animated particle streams of global winds and ocean currents',
+      'Switch between atmospheric layers from surface winds to the stratosphere',
+      'Mesmerizing fusion of real-time science and generative aesthetics'
+    ],
     screenshot: 'assets/earth-nullschool-preview.jpg',
     url: 'https://earth.nullschool.net',
     creator: 'Cameron Beccario',
@@ -231,7 +273,13 @@ export const SIGNALS = [
     name: 'Museum of Endangered Sounds',
     tagline: 'Preserving the endangered sounds of obsolete technology.',
     description: 'Preserve obsolete digital sounds before they disappear forever.',
-    screenshot: '',
+    largerDescription: 'A lovingly curated archive of sounds made by now-extinct or endangered technology — dial-up modems, ICQ alerts, the Nokia ringtone, AIM door sounds, and dozens more. Each sound is playable in-browser and paired with the device that created it.',
+    whyVisit: [
+      'Interactive soundboard of extinct technology and computing relics',
+      'Relive 56k dial-up modems, dot matrix printers, and ICQ chimes',
+      'A nostalgic sonic time capsule preserving early digital culture'
+    ],
+    screenshot: 'assets/endangered-sounds-preview.jpg',
     url: 'http://savethesounds.info',
     creator: 'Brendan Chilcutt',
     year: 2012,
@@ -244,10 +292,9 @@ export const SIGNALS = [
     fullDescription: 'A lovingly curated archive of sounds made by now-extinct or endangered technology — dial-up modems, ICQ alerts, the Nokia ringtone, AIM door sounds, and dozens more. Each sound is playable in-browser and paired with the device that created it.',
     why: 'As technology evolves, the sounds that once defined our daily digital lives vanish silently. This project is equal parts time capsule and love letter to an analog-digital era we are rapidly forgetting.',
     bestFor: [
-      'Anyone feeling nostalgic for the sounds of early computing',
-      'Sound designers and audio archivists',
-      'Educators teaching the history of personal technology',
-      'Retro tech enthusiasts and collectors'
+      'Anyone feeling nostalgic for early computing sounds',
+      'Sound designers and audio preservationists',
+      'Retro technology enthusiasts and collectors'
     ],
     notableFeatures: [
       { title: 'Interactive Sound Board', desc: 'click any device to hear its signature sound instantly' },
@@ -263,7 +310,13 @@ export const SIGNALS = [
     name: 'FutureMe',
     tagline: 'Write a letter to your future self and receive it years later.',
     description: 'Send letters to your future self, delivered on any date you choose.',
-    screenshot: '',
+    largerDescription: 'FutureMe lets you compose an email to yourself that will be delivered on a date of your choosing — days, months, or years in the future. Since 2002, millions of letters have been written and delivered, creating a global archive of human hope, ambition, and introspection.',
+    whyVisit: [
+      'Schedule confidential emails to yourself days to decades ahead',
+      'Powerful practice of personal accountability and self-reflection',
+      'Over 20 years of continuous operation and millions of letters delivered'
+    ],
+    screenshot: 'assets/futureme-preview.jpg',
     url: 'https://www.futureme.org',
     creator: 'Matt Sly & Jay Patrikios',
     year: 2002,
@@ -276,9 +329,8 @@ export const SIGNALS = [
     fullDescription: 'FutureMe lets you compose an email to yourself that will be delivered on a date of your choosing — days, months, or years in the future. Since 2002, millions of letters have been written and delivered, creating a global archive of human hope, ambition, and introspection.',
     why: 'In a world of instant everything, FutureMe forces you to think beyond the present moment. Receiving a letter from your past self is startling, emotional, and deeply personal — a private time capsule delivered to your inbox.',
     bestFor: [
-      'Journaling and self-reflection enthusiasts',
+      'Journaling and thoughtful self-reflection enthusiasts',
       'Goal-setters wanting future accountability',
-      'Teachers and therapists using reflective exercises',
       'Anyone curious about the gap between intention and outcome'
     ],
     notableFeatures: [
@@ -298,14 +350,14 @@ SIGNALS.forEach(s => { SIGNALS_BY_ID[s.id] = s; });
 
 // Category filter definitions — maps filter key to matching logic
 export const FILTER_CATEGORIES = [
-  { key: 'all',         label: 'ALL' },
-  { key: 'portfolio',   label: 'PORTFOLIOS' },
+  { key: 'all', label: 'ALL' },
+  { key: 'portfolio', label: 'PORTFOLIOS' },
   { key: 'interactive', label: 'INTERACTIVE' },
-  { key: 'ai',          label: 'AI' },
-  { key: 'tool',        label: 'TOOLS' },
-  { key: 'game',        label: 'GAMES' },
-  { key: 'art',         label: 'ART' },
-  { key: 'opensource',   label: 'OPEN SOURCE' },
-  { key: 'retro',       label: 'RETRO' },
-  { key: 'experiment',  label: 'EXPERIMENTS' }
+  { key: 'ai', label: 'AI' },
+  { key: 'tool', label: 'TOOLS' },
+  { key: 'game', label: 'GAMES' },
+  { key: 'art', label: 'ART' },
+  { key: 'opensource', label: 'OPEN SOURCE' },
+  { key: 'retro', label: 'RETRO' },
+  { key: 'experiment', label: 'EXPERIMENTS' }
 ];
