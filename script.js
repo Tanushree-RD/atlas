@@ -329,50 +329,50 @@ document.addEventListener('DOMContentLoaded', () => {
         float w2 = cos(p.x * 1.4 - t * 0.60) * 0.055;
         vec2 wp = p + vec2(w1, w2);
 
-        // Drifting organic dark red / oxblood mesh centers
-        vec2 c1 = vec2((0.32 + 0.16 * sin(t * 0.70)) * aspect, 0.68 + 0.12 * cos(t * 0.55));
-        vec2 c2 = vec2((0.74 + 0.15 * cos(t * 0.50 + 1.4)) * aspect, 0.38 + 0.14 * sin(t * 0.65 + 0.8));
-        vec2 c3 = vec2((0.48 + 0.18 * sin(t * 0.40 + 2.6)) * aspect, 0.80 + 0.10 * cos(t * 0.45 + 1.9));
-        vec2 c4 = vec2((0.18 + 0.12 * cos(t * 0.60 + 3.2)) * aspect, 0.30 + 0.12 * sin(t * 0.35 + 2.2));
+        // Drifting organic dark red / oxblood mesh centers positioned toward flanks
+        vec2 c1 = vec2((0.18 + 0.10 * sin(t * 0.70)) * aspect, 0.78 + 0.08 * cos(t * 0.55));
+        vec2 c2 = vec2((0.84 + 0.10 * cos(t * 0.50 + 1.4)) * aspect, 0.28 + 0.08 * sin(t * 0.65 + 0.8));
+        vec2 c3 = vec2((0.78 + 0.10 * sin(t * 0.40 + 2.6)) * aspect, 0.82 + 0.08 * cos(t * 0.45 + 1.9));
+        vec2 c4 = vec2((0.14 + 0.08 * cos(t * 0.60 + 3.2)) * aspect, 0.22 + 0.08 * sin(t * 0.35 + 2.2));
 
-        // Broad, soft radial falloffs
+        // Broad, soft radial falloffs with ~50% reduced spread and intensity
         float d1 = length(wp - c1);
         float d2 = length(wp - c2);
         float d3 = length(wp - c3);
         float d4 = length(wp - c4);
 
-        float m1 = smoothstep(1.15, 0.0, d1);
-        float m2 = smoothstep(1.05, 0.0, d2);
-        float m3 = smoothstep(0.90, 0.0, d3);
-        float m4 = smoothstep(0.80, 0.0, d4);
+        float m1 = smoothstep(0.62, 0.0, d1);
+        float m2 = smoothstep(0.56, 0.0, d2);
+        float m3 = smoothstep(0.48, 0.0, d3);
+        float m4 = smoothstep(0.42, 0.0, d4);
 
         // Gentle spotlight tracking mouse
         float mDist = length(p - m);
-        float spot = smoothstep(0.80, 0.0, mDist);
+        float spot = smoothstep(0.52, 0.0, mDist);
 
-        // Color scheme: Almost black void with subtle deep wine / dark red highlights
-        vec3 cVoid     = vec3(0.024, 0.024, 0.028); // #060608 deep obsidian
-        vec3 cWine     = vec3(0.095, 0.010, 0.016); // subtle dark wine
-        vec3 cGarnet   = vec3(0.145, 0.015, 0.025); // deep garnet
-        vec3 cCrimson  = vec3(0.195, 0.022, 0.035); // dark ruby highlight
-        vec3 cSpot     = vec3(0.085, 0.010, 0.015); // gentle cursor sheen
+        // Color scheme: Mostly deep obsidian void with very subtle dark wine / red ambient tint
+        vec3 cVoid     = vec3(0.016, 0.016, 0.020); // deep obsidian black
+        vec3 cWine     = vec3(0.048, 0.005, 0.008); // subtle dark wine (reduced ~50%)
+        vec3 cGarnet   = vec3(0.072, 0.008, 0.012); // deep garnet (reduced ~50%)
+        vec3 cCrimson  = vec3(0.098, 0.011, 0.018); // dark ruby tint (reduced ~50%)
+        vec3 cSpot     = vec3(0.040, 0.005, 0.008); // subtle cursor sheen
 
-        // Composite mesh colors
+        // Composite mesh colors with reduced intensity
         vec3 col = cVoid;
-        col += cWine    * (m1 * 0.70);
-        col += cGarnet  * (m2 * 0.60);
-        col += cCrimson * (m3 * 0.45);
-        col += cWine    * (m4 * 0.40);
-        col += cSpot    * (spot * 0.40);
+        col += cWine    * (m1 * 0.42);
+        col += cGarnet  * (m2 * 0.36);
+        col += cCrimson * (m3 * 0.26);
+        col += cWine    * (m4 * 0.22);
+        col += cSpot    * (spot * 0.22);
 
         // Very subtle contour depth
         float wave = sin((wp.x * 2.5 + wp.y * 3.0 + t) * 3.14159) * 0.5 + 0.5;
-        col += cCrimson * (wave * 0.018);
+        col += cCrimson * (wave * 0.008);
 
-        // Soft internal vignette
+        // Soft internal vignette keeping center mostly black
         vec2 vCoord = (st - 0.5) * vec2(aspect, 1.0);
-        float vig = smoothstep(1.3, 0.35, length(vCoord));
-        col *= (0.50 + 0.50 * vig);
+        float vig = smoothstep(1.2, 0.25, length(vCoord));
+        col *= (0.60 + 0.40 * vig);
 
         gl_FragColor = vec4(col, 1.0);
       }
@@ -411,8 +411,8 @@ document.addEventListener('DOMContentLoaded', () => {
     gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
       -1, -1,
-       3, -1,
-      -1,  3
+      3, -1,
+      -1, 3
     ]), gl.STATIC_DRAW);
 
     const aPos = gl.getAttribLocation(program, 'a_pos');
@@ -488,30 +488,30 @@ document.addEventListener('DOMContentLoaded', () => {
       mouse.x += (targetMouse.x - mouse.x) * 0.03;
       mouse.y += (targetMouse.y - mouse.y) * 0.03;
 
-      ctx.fillStyle = '#060608';
+      ctx.fillStyle = '#050507';
       ctx.fillRect(0, 0, w, h);
 
-      const x1 = (0.32 + 0.16 * Math.sin(t * 0.7)) * w;
-      const y1 = (0.68 + 0.12 * Math.cos(t * 0.55)) * h;
-      const g1 = ctx.createRadialGradient(x1, y1, 0, x1, y1, w * 0.55);
-      g1.addColorStop(0, 'rgba(160, 20, 36, 0.28)');
-      g1.addColorStop(1, 'rgba(6, 6, 8, 0)');
+      const x1 = (0.20 + 0.10 * Math.sin(t * 0.7)) * w;
+      const y1 = (0.78 + 0.08 * Math.cos(t * 0.55)) * h;
+      const g1 = ctx.createRadialGradient(x1, y1, 0, x1, y1, w * 0.32);
+      g1.addColorStop(0, 'rgba(120, 15, 22, 0.13)');
+      g1.addColorStop(1, 'rgba(5, 5, 7, 0)');
       ctx.fillStyle = g1;
       ctx.fillRect(0, 0, w, h);
 
-      const x2 = (0.74 + 0.15 * Math.cos(t * 0.5 + 1.4)) * w;
-      const y2 = (0.38 + 0.14 * Math.sin(t * 0.65 + 0.8)) * h;
-      const g2 = ctx.createRadialGradient(x2, y2, 0, x2, y2, w * 0.5);
-      g2.addColorStop(0, 'rgba(210, 28, 48, 0.22)');
-      g2.addColorStop(1, 'rgba(6, 6, 8, 0)');
+      const x2 = (0.84 + 0.10 * Math.cos(t * 0.5 + 1.4)) * w;
+      const y2 = (0.30 + 0.08 * Math.sin(t * 0.65 + 0.8)) * h;
+      const g2 = ctx.createRadialGradient(x2, y2, 0, x2, y2, w * 0.28);
+      g2.addColorStop(0, 'rgba(150, 18, 28, 0.10)');
+      g2.addColorStop(1, 'rgba(5, 5, 7, 0)');
       ctx.fillStyle = g2;
       ctx.fillRect(0, 0, w, h);
 
       const sx = mouse.x * w;
       const sy = (1.0 - mouse.y) * h;
-      const gs = ctx.createRadialGradient(sx, sy, 0, sx, sy, 500);
-      gs.addColorStop(0, 'rgba(239, 68, 68, 0.10)');
-      gs.addColorStop(1, 'rgba(6, 6, 8, 0)');
+      const gs = ctx.createRadialGradient(sx, sy, 0, sx, sy, 300);
+      gs.addColorStop(0, 'rgba(180, 22, 32, 0.05)');
+      gs.addColorStop(1, 'rgba(5, 5, 7, 0)');
       ctx.fillStyle = gs;
       ctx.fillRect(0, 0, w, h);
     }
@@ -546,7 +546,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let height = 0;
     let dpr = 1;
     let nodes = [];
-    let links = [];
     let isVisible = true;
     let animationFrameId = null;
 
@@ -556,18 +555,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const CONFIG = {
       // Primary layer
       spacing: 32,
-      baseRadius: 1.3,
+      baseRadius: 1.25,
       maxDisplacement: 16,
       influenceRadius: 160,
       spring: 0.068,
       damping: 0.83,
-      // Colors
-      whiteBase: 'rgba(240, 242, 246, 0.22)',
-      whiteActive: 'rgba(255, 255, 255, 0.45)',
-      redBase: 'rgba(175, 26, 38, 0.32)',
-      redActive: 'rgba(205, 36, 48, 0.55)',
-      lineBase: 'rgba(240, 242, 246, 0.07)',
-      lineActive: 'rgba(240, 242, 246, 0.22)',
+      // Colors - slightly lowered opacity for crisp typographic contrast
+      whiteBase: 'rgba(240, 242, 246, 0.14)',
+      whiteActive: 'rgba(255, 255, 255, 0.30)',
+      redBase: 'rgba(175, 26, 38, 0.20)',
+      redActive: 'rgba(205, 36, 48, 0.36)',
       // Radar wave parameters
       wavePeriod: 6.5,     // sweeps every 6.5 seconds
       waveWidth: 140,      // pulse width in px
@@ -576,7 +573,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createNetwork() {
       nodes = [];
-      links = [];
 
       // ── Layer 0: Background Deep Layer (depth: 0.42, slower, subtle) ──
       const bgSpacing = 48;
@@ -680,30 +676,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      // Generate occasional ultra-thin topological connections between nearest neighbors
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-          const nodeA = grid2D[r][c];
-          if (!nodeA) continue;
-
-          // Connect to right neighbor (~22% probability)
-          if (c + 1 < cols && (c * 11 + r * 13) % 9 < 2) {
-            links.push({ a: nodeA, b: grid2D[r][c + 1] });
-          }
-
-          // Connect to diagonal hex neighbors (~18% probability)
-          const isOffset = (r % 2 === 1);
-          const downCol1 = isOffset ? c : c - 1;
-          const downCol2 = isOffset ? c + 1 : c;
-
-          if (r + 1 < rows && downCol1 >= 0 && downCol1 < cols && (c * 17 + r * 7) % 11 < 2) {
-            links.push({ a: nodeA, b: grid2D[r + 1][downCol1] });
-          }
-          if (r + 1 < rows && downCol2 >= 0 && downCol2 < cols && (c * 19 + r * 5) % 13 < 2) {
-            links.push({ a: nodeA, b: grid2D[r + 1][downCol2] });
-          }
-        }
-      }
     }
 
     function resize() {
@@ -907,38 +879,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.save();
       ctx.scale(dpr, dpr);
 
-      // ── 1. Ultra-Thin Network Connection Lines ──
-      ctx.lineWidth = 0.55;
-      ctx.beginPath();
-      for (let i = 0; i < links.length; i++) {
-        const link = links[i];
-        ctx.moveTo(link.a.x, link.a.y);
-        ctx.lineTo(link.b.x, link.b.y);
-      }
-      ctx.strokeStyle = CONFIG.lineBase;
-      ctx.stroke();
 
-      // Highlight links illuminated by radar wave or cursor proximity
-      let hasLitLinks = false;
-      for (let i = 0; i < links.length; i++) {
-        const link = links[i];
-        if (link.a.scanIntensity > 0.08 || link.b.scanIntensity > 0.08 || link.a.scale > 1.08 || link.b.scale > 1.08) {
-          hasLitLinks = true;
-          break;
-        }
-      }
-      if (hasLitLinks) {
-        ctx.beginPath();
-        for (let i = 0; i < links.length; i++) {
-          const link = links[i];
-          if (link.a.scanIntensity > 0.08 || link.b.scanIntensity > 0.08 || link.a.scale > 1.08 || link.b.scale > 1.08) {
-            ctx.moveTo(link.a.x, link.a.y);
-            ctx.lineTo(link.b.x, link.b.y);
-          }
-        }
-        ctx.strokeStyle = CONFIG.lineActive;
-        ctx.stroke();
-      }
 
       // ── 2. Batch Solid Dots (Layer 0 & 1) ──
       ctx.beginPath();
@@ -1021,7 +962,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.arc(d.x, d.y, r, 0, Math.PI * 2);
           }
         }
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.18)';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.10)';
         ctx.fill();
       }
 
