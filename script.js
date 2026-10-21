@@ -518,10 +518,10 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(render);
   }
 
-  // ── Interactive Full-Screen Hero Halftone Dot Field ────
-  initHalftoneField();
+  // ── Topological Information Network ──────────────────
+  initInformationNetwork();
 
-  function initHalftoneField() {
+  function initInformationNetwork() {
     const canvas = document.getElementById('halftone-canvas');
     if (!canvas) return;
 
@@ -535,8 +535,8 @@ document.addEventListener('DOMContentLoaded', () => {
     motionQuery.addEventListener('change', (e) => {
       prefersReducedMotion = e.matches;
       if (prefersReducedMotion) {
-        resetDots();
-        render();
+        resetNodes();
+        render(performance.now());
       } else {
         startAnimation();
       }
@@ -545,9 +545,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let width = 0;
     let height = 0;
     let dpr = 1;
-    let whiteDots = [];
-    let redDots = [];
-    let allDots = [];
+    let nodes = [];
+    let links = [];
     let isVisible = true;
     let animationFrameId = null;
 
@@ -555,43 +554,52 @@ document.addEventListener('DOMContentLoaded', () => {
     const targetMouse = { x: -9999, y: -9999, active: false };
 
     const CONFIG = {
-      spacing: 24,           // Crisp editorial spacing across full viewport
-      baseRadius: 1.35,      // Small, refined screentone dots
-      maxDisplacement: 18,   // Subtle movement within 15-20px
-      influenceRadius: 140,  // Cursor interaction zone
-      spring: 0.075,         // Organic spring rate
-      damping: 0.82,         // Smooth easing without bounce
-      whiteColor: 'rgba(240, 242, 246, 0.24)',
-      redColor: 'rgba(165, 24, 36, 0.32)'
+      // Primary layer
+      spacing: 32,
+      baseRadius: 1.3,
+      maxDisplacement: 16,
+      influenceRadius: 160,
+      spring: 0.068,
+      damping: 0.83,
+      // Colors
+      whiteBase: 'rgba(240, 242, 246, 0.22)',
+      whiteActive: 'rgba(255, 255, 255, 0.45)',
+      redBase: 'rgba(175, 26, 38, 0.32)',
+      redActive: 'rgba(205, 36, 48, 0.55)',
+      lineBase: 'rgba(240, 242, 246, 0.07)',
+      lineActive: 'rgba(240, 242, 246, 0.22)',
+      // Radar wave parameters
+      wavePeriod: 6.5,     // sweeps every 6.5 seconds
+      waveWidth: 140,      // pulse width in px
+      waveAngle: 0.55      // ~31.5 degrees diagonal sweep
     };
 
-    function createGrid() {
-      whiteDots = [];
-      redDots = [];
-      allDots = [];
+    function createNetwork() {
+      nodes = [];
+      links = [];
 
-      const spacing = CONFIG.spacing;
-      const rowHeight = spacing * 0.866; // isometric hexagonal lattice
+      // ── Layer 0: Background Deep Layer (depth: 0.42, slower, subtle) ──
+      const bgSpacing = 48;
+      const bgCols = Math.ceil(width / bgSpacing) + 2;
+      const bgRows = Math.ceil(height / (bgSpacing * 0.866)) + 2;
+      const bgStartX = (width - (bgCols - 1) * bgSpacing) / 2;
+      const bgStartY = (height - (bgRows - 1) * (bgSpacing * 0.866)) / 2;
 
-      // Extend slightly beyond bounds so dots bleed naturally past viewport edges before fading
-      const extraPad = 24;
-      const cols = Math.ceil((width + extraPad * 2) / spacing) + 2;
-      const rows = Math.ceil((height + extraPad * 2) / rowHeight) + 2;
-
-      const startX = -extraPad + (width + extraPad * 2 - (cols - 1) * spacing) / 2;
-      const startY = -extraPad + (height + extraPad * 2 - (rows - 1) * rowHeight) / 2;
-
-      for (let r = 0; r < rows; r++) {
+      for (let r = 0; r < bgRows; r++) {
         const isOffset = (r % 2 === 1);
-        const y = startY + r * rowHeight;
+        const y = bgStartY + r * (bgSpacing * 0.866);
 
-        for (let c = 0; c < cols; c++) {
-          const x = startX + c * spacing + (isOffset ? spacing * 0.5 : 0);
+        for (let c = 0; c < bgCols; c++) {
+          const x = bgStartX + c * bgSpacing + (isOffset ? bgSpacing * 0.5 : 0);
 
-          // Editorial accent rhythm: ~20% dark red dots, ~80% white dots
-          const isRed = (c * 7 + r * 11) % 5 === 0;
+          // Background glyph types: micro-dots and micro-crosses
+          const glyphType = ((c + r * 3) % 4 === 0) ? 'cross' : 'dot';
+          const isRed = ((c * 5 + r * 7) % 7 === 0);
 
-          const dot = {
+          nodes.push({
+            layer: 0,
+            depth: 0.42,
+            glyph: glyphType,
             ox: x,
             oy: y,
             x: x,
@@ -602,18 +610,97 @@ document.addEventListener('DOMContentLoaded', () => {
             vy: 0,
             targetDx: 0,
             targetDy: 0,
+            baseRadius: 0.85,
+            scale: 1,
+            targetScale: 1,
+            isRed: isRed,
+            scanIntensity: 0,
+            active: false
+          });
+        }
+      }
+
+      // ── Layer 1: Foreground Topological Network (depth: 1.0) ──
+      const fgSpacing = CONFIG.spacing;
+      const rowHeight = fgSpacing * 0.866;
+      const extraPad = 30;
+      const cols = Math.ceil((width + extraPad * 2) / fgSpacing) + 2;
+      const rows = Math.ceil((height + extraPad * 2) / rowHeight) + 2;
+      const startX = -extraPad + (width + extraPad * 2 - (cols - 1) * fgSpacing) / 2;
+      const startY = -extraPad + (height + extraPad * 2 - (rows - 1) * rowHeight) / 2;
+
+      const grid2D = [];
+
+      for (let r = 0; r < rows; r++) {
+        grid2D[r] = [];
+        const isOffset = (r % 2 === 1);
+        const y = startY + r * rowHeight;
+
+        for (let c = 0; c < cols; c++) {
+          // Subtle organic coordinate jitter (+- 1.5px) for authentic topological telemetry
+          const jitterX = ((c * 17 + r * 23) % 7 - 3) * 0.4;
+          const jitterY = ((c * 19 + r * 13) % 7 - 3) * 0.4;
+          const x = startX + c * fgSpacing + (isOffset ? fgSpacing * 0.5 : 0) + jitterX;
+          const actualY = y + jitterY;
+
+          // Glyph distribution:
+          // 0: solid dot (50%), 1: hollow dot (20%), 2: tiny cross (18%), 3: tiny square (12%)
+          const hash = (c * 7 + r * 13 + (c % 3) * 5) % 100;
+          let glyphType = 'dot';
+          if (hash > 88) glyphType = 'square';
+          else if (hash > 70) glyphType = 'cross';
+          else if (hash > 50) glyphType = 'hollow';
+
+          const isRed = ((c * 3 + r * 7) % 6 === 0);
+
+          const node = {
+            layer: 1,
+            depth: 1.0,
+            glyph: glyphType,
+            ox: x,
+            oy: actualY,
+            x: x,
+            y: actualY,
+            dx: 0,
+            dy: 0,
+            vx: 0,
+            vy: 0,
+            targetDx: 0,
+            targetDy: 0,
             baseRadius: CONFIG.baseRadius,
             scale: 1,
             targetScale: 1,
             isRed: isRed,
+            scanIntensity: 0,
             active: false
           };
 
-          allDots.push(dot);
-          if (isRed) {
-            redDots.push(dot);
-          } else {
-            whiteDots.push(dot);
+          nodes.push(node);
+          grid2D[r][c] = node;
+        }
+      }
+
+      // Generate occasional ultra-thin topological connections between nearest neighbors
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const nodeA = grid2D[r][c];
+          if (!nodeA) continue;
+
+          // Connect to right neighbor (~22% probability)
+          if (c + 1 < cols && (c * 11 + r * 13) % 9 < 2) {
+            links.push({ a: nodeA, b: grid2D[r][c + 1] });
+          }
+
+          // Connect to diagonal hex neighbors (~18% probability)
+          const isOffset = (r % 2 === 1);
+          const downCol1 = isOffset ? c : c - 1;
+          const downCol2 = isOffset ? c + 1 : c;
+
+          if (r + 1 < rows && downCol1 >= 0 && downCol1 < cols && (c * 17 + r * 7) % 11 < 2) {
+            links.push({ a: nodeA, b: grid2D[r + 1][downCol1] });
+          }
+          if (r + 1 < rows && downCol2 >= 0 && downCol2 < cols && (c * 19 + r * 5) % 13 < 2) {
+            links.push({ a: nodeA, b: grid2D[r + 1][downCol2] });
           }
         }
       }
@@ -630,16 +717,16 @@ document.addEventListener('DOMContentLoaded', () => {
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
 
-      createGrid();
+      createNetwork();
 
       if (prefersReducedMotion) {
-        render();
+        render(performance.now());
       }
     }
 
-    function resetDots() {
-      for (let i = 0; i < allDots.length; i++) {
-        const d = allDots[i];
+    function resetNodes() {
+      for (let i = 0; i < nodes.length; i++) {
+        const d = nodes[i];
         d.dx = 0;
         d.dy = 0;
         d.vx = 0;
@@ -651,17 +738,17 @@ document.addEventListener('DOMContentLoaded', () => {
         d.x = d.ox;
         d.y = d.oy;
         d.active = false;
+        d.scanIntensity = 0;
       }
     }
 
-    // Full-screen hero pointer tracking
+    // Pointer tracking across the hero
     function updatePointer(clientX, clientY, active) {
       if (!active) {
         targetMouse.active = false;
         return;
       }
       const rect = canvas.getBoundingClientRect();
-      // Track anywhere within the hero viewport
       if (
         clientX >= rect.left &&
         clientX <= rect.right &&
@@ -713,37 +800,59 @@ document.addEventListener('DOMContentLoaded', () => {
       observer.observe(heroSection);
     }
 
-    function updatePhysics() {
+    function updatePhysics(now) {
       if (targetMouse.active) {
-        mouse.x += (targetMouse.x - mouse.x) * 0.22;
-        mouse.y += (targetMouse.y - mouse.y) * 0.22;
+        mouse.x += (targetMouse.x - mouse.x) * 0.18;
+        mouse.y += (targetMouse.y - mouse.y) * 0.18;
         mouse.active = true;
       } else {
         mouse.active = false;
       }
 
+      // Radar scan wave calculation
+      const elapsed = now * 0.001;
+      const cosA = Math.cos(CONFIG.waveAngle);
+      const sinA = Math.sin(CONFIG.waveAngle);
+      const maxProj = width * cosA + height * sinA;
+      const wavePhase = (elapsed % CONFIG.wavePeriod) / CONFIG.wavePeriod;
+      const wavePos = wavePhase * (maxProj + 300) - 150;
+      const waveWidth = CONFIG.waveWidth;
+
       const maxDisp = CONFIG.maxDisplacement;
       const rInfl = CONFIG.influenceRadius;
-      const rInflSq = rInfl * rInfl;
 
-      for (let i = 0; i < allDots.length; i++) {
-        const d = allDots[i];
+      for (let i = 0; i < nodes.length; i++) {
+        const d = nodes[i];
 
+        // 1. Radar wave illumination
+        const proj = d.ox * cosA + d.oy * sinA;
+        const distToWave = Math.abs(proj - wavePos);
+        if (distToWave < waveWidth) {
+          const wFactor = 1 - distToWave / waveWidth;
+          d.scanIntensity = wFactor * wFactor * 0.35;
+        } else {
+          d.scanIntensity = 0;
+        }
+
+        // 2. Magnetic cursor distortion
         if (mouse.active) {
           const dx = d.ox - mouse.x;
           const dy = d.oy - mouse.y;
-          const distSq = dx * dx + dy * dy;
+          const dist = Math.hypot(dx, dy);
 
-          if (distSq < rInflSq && distSq > 0.001) {
-            const dist = Math.sqrt(distSq);
+          if (dist < rInfl && dist > 0.001) {
             const t = 1 - (dist / rInfl);
-            // Smoothstep curve for calm, organic editorial movement
-            const force = t * t * (3 - 2 * t);
+            // Magnetic flux bell-curve (peaks mid-field, smooth dipoles)
+            const magneticForce = Math.sin(t * Math.PI);
             const angle = Math.atan2(dy, dx);
 
-            d.targetDx = Math.cos(angle) * force * maxDisp;
-            d.targetDy = Math.sin(angle) * force * maxDisp;
-            d.targetScale = 1.0 + force * 0.55;
+            // Dipole displacement + subtle curl vortex
+            const fRadial = magneticForce * maxDisp * d.depth;
+            const fCurl = magneticForce * 5 * d.depth;
+
+            d.targetDx = Math.cos(angle) * fRadial - Math.sin(angle) * fCurl;
+            d.targetDy = Math.sin(angle) * fRadial + Math.cos(angle) * fCurl;
+            d.targetScale = 1.0 + t * 0.40 * d.depth;
             d.active = true;
           } else {
             d.targetDx = 0;
@@ -756,10 +865,10 @@ document.addEventListener('DOMContentLoaded', () => {
           d.targetScale = 1.0;
         }
 
-        // Fast bail-out for resting dots
+        // Fast bail-out for resting nodes
         if (!d.active && d.targetDx === 0) continue;
 
-        // Spring-damper physics for natural elastic return
+        // Damped harmonic spring physics
         const ax = (d.targetDx - d.dx) * CONFIG.spring;
         const ay = (d.targetDy - d.dy) * CONFIG.spring;
 
@@ -771,7 +880,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         d.scale += (d.targetScale - d.scale) * 0.10;
 
-        // Settle near-zero values to eliminate idle jitter
+        // Threshold settling to prevent idle CPU cycles
         if (d.targetDx === 0 && Math.abs(d.dx) < 0.015 && Math.abs(d.vx) < 0.001) {
           d.dx = 0;
           d.vx = 0;
@@ -793,64 +902,137 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    function render() {
+    function render(now) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.save();
       ctx.scale(dpr, dpr);
 
-      // 1. Draw white dots in a single batch
+      // ── 1. Ultra-Thin Network Connection Lines ──
+      ctx.lineWidth = 0.55;
       ctx.beginPath();
-      for (let i = 0; i < whiteDots.length; i++) {
-        const d = whiteDots[i];
-        const r = d.baseRadius * d.scale;
-        ctx.moveTo(d.x + r, d.y);
-        ctx.arc(d.x, d.y, r, 0, Math.PI * 2);
+      for (let i = 0; i < links.length; i++) {
+        const link = links[i];
+        ctx.moveTo(link.a.x, link.a.y);
+        ctx.lineTo(link.b.x, link.b.y);
       }
-      ctx.fillStyle = CONFIG.whiteColor;
-      ctx.fill();
+      ctx.strokeStyle = CONFIG.lineBase;
+      ctx.stroke();
 
-      // 2. Draw dark red dots in a single batch
-      ctx.beginPath();
-      for (let i = 0; i < redDots.length; i++) {
-        const d = redDots[i];
-        const r = d.baseRadius * d.scale;
-        ctx.moveTo(d.x + r, d.y);
-        ctx.arc(d.x, d.y, r, 0, Math.PI * 2);
-      }
-      ctx.fillStyle = CONFIG.redColor;
-      ctx.fill();
-
-      // 3. Subtle cursor proximity highlight over active dots
-      let hasActive = false;
-      for (let i = 0; i < allDots.length; i++) {
-        if (allDots[i].active && allDots[i].scale > 1.06) {
-          hasActive = true;
+      // Highlight links illuminated by radar wave or cursor proximity
+      let hasLitLinks = false;
+      for (let i = 0; i < links.length; i++) {
+        const link = links[i];
+        if (link.a.scanIntensity > 0.08 || link.b.scanIntensity > 0.08 || link.a.scale > 1.08 || link.b.scale > 1.08) {
+          hasLitLinks = true;
           break;
         }
       }
-      if (hasActive) {
+      if (hasLitLinks) {
         ctx.beginPath();
-        for (let i = 0; i < allDots.length; i++) {
-          const d = allDots[i];
-          if (d.active && d.scale > 1.06) {
-            const r = d.baseRadius * d.scale;
+        for (let i = 0; i < links.length; i++) {
+          const link = links[i];
+          if (link.a.scanIntensity > 0.08 || link.b.scanIntensity > 0.08 || link.a.scale > 1.08 || link.b.scale > 1.08) {
+            ctx.moveTo(link.a.x, link.a.y);
+            ctx.lineTo(link.b.x, link.b.y);
+          }
+        }
+        ctx.strokeStyle = CONFIG.lineActive;
+        ctx.stroke();
+      }
+
+      // ── 2. Batch Solid Dots (Layer 0 & 1) ──
+      ctx.beginPath();
+      for (let i = 0; i < nodes.length; i++) {
+        const d = nodes[i];
+        if (d.glyph !== 'dot' || d.isRed) continue;
+        const r = d.baseRadius * d.scale;
+        ctx.moveTo(d.x + r, d.y);
+        ctx.arc(d.x, d.y, r, 0, Math.PI * 2);
+      }
+      ctx.fillStyle = CONFIG.whiteBase;
+      ctx.fill();
+
+      // Solid Red Dots
+      ctx.beginPath();
+      for (let i = 0; i < nodes.length; i++) {
+        const d = nodes[i];
+        if (d.glyph !== 'dot' || !d.isRed) continue;
+        const r = d.baseRadius * d.scale;
+        ctx.moveTo(d.x + r, d.y);
+        ctx.arc(d.x, d.y, r, 0, Math.PI * 2);
+      }
+      ctx.fillStyle = CONFIG.redBase;
+      ctx.fill();
+
+      // ── 3. Batch Hollow Dots (Stroked Circles) ──
+      ctx.lineWidth = 0.75;
+      ctx.beginPath();
+      for (let i = 0; i < nodes.length; i++) {
+        const d = nodes[i];
+        if (d.glyph !== 'hollow') continue;
+        const r = (d.baseRadius + 0.3) * d.scale;
+        ctx.moveTo(d.x + r, d.y);
+        ctx.arc(d.x, d.y, r, 0, Math.PI * 2);
+      }
+      ctx.strokeStyle = CONFIG.whiteBase;
+      ctx.stroke();
+
+      // ── 4. Batch Tiny Crosses (+) ──
+      ctx.lineWidth = 0.75;
+      ctx.beginPath();
+      for (let i = 0; i < nodes.length; i++) {
+        const d = nodes[i];
+        if (d.glyph !== 'cross') continue;
+        const s = 2.4 * d.scale;
+        ctx.moveTo(d.x - s, d.y);
+        ctx.lineTo(d.x + s, d.y);
+        ctx.moveTo(d.x, d.y - s);
+        ctx.lineTo(d.x, d.y + s);
+      }
+      ctx.strokeStyle = CONFIG.whiteBase;
+      ctx.stroke();
+
+      // ── 5. Batch Tiny Squares ──
+      ctx.beginPath();
+      for (let i = 0; i < nodes.length; i++) {
+        const d = nodes[i];
+        if (d.glyph !== 'square') continue;
+        const s = 1.4 * d.scale;
+        ctx.rect(d.x - s, d.y - s, s * 2, s * 2);
+      }
+      ctx.fillStyle = CONFIG.whiteBase;
+      ctx.fill();
+
+      // ── 6. Scan Wave & Magnetic Illumination Sheen ──
+      let hasIlluminated = false;
+      for (let i = 0; i < nodes.length; i++) {
+        if (nodes[i].scanIntensity > 0.05 || (nodes[i].active && nodes[i].scale > 1.05)) {
+          hasIlluminated = true;
+          break;
+        }
+      }
+      if (hasIlluminated) {
+        ctx.beginPath();
+        for (let i = 0; i < nodes.length; i++) {
+          const d = nodes[i];
+          if (d.scanIntensity > 0.05 || (d.active && d.scale > 1.05)) {
+            const r = (d.baseRadius + 0.4) * d.scale;
             ctx.moveTo(d.x + r, d.y);
             ctx.arc(d.x, d.y, r, 0, Math.PI * 2);
           }
         }
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.16)';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.18)';
         ctx.fill();
       }
 
-      // 4. Full-screen elliptical radial opacity mask:
-      // Fades smoothly toward the outer edges so the pattern blends seamlessly into the dark background
+      // ── 7. Elliptical Radial Opacity Mask ──
       const centerX = width * 0.5;
       const centerY = height * 0.5;
       const maskRadius = width * 0.58;
 
       ctx.save();
       ctx.translate(centerX, centerY);
-      ctx.scale(1, height / width); // Match hero viewport aspect ratio
+      ctx.scale(1, height / width);
 
       const radialMask = ctx.createRadialGradient(0, 0, 0, 0, 0, maskRadius);
       radialMask.addColorStop(0, 'rgba(0, 0, 0, 1)');
@@ -869,20 +1051,20 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.restore();
     }
 
-    function animate() {
+    function animate(now) {
       if (!isVisible) {
         animationFrameId = null;
         return;
       }
 
       if (prefersReducedMotion) {
-        render();
+        render(now);
         animationFrameId = null;
         return;
       }
 
-      updatePhysics();
-      render();
+      updatePhysics(now);
+      render(now);
       animationFrameId = requestAnimationFrame(animate);
     }
 
