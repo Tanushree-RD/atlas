@@ -517,4 +517,381 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     requestAnimationFrame(render);
   }
+
+  // ── Interactive Full-Screen Hero Halftone Dot Field ────
+  initHalftoneField();
+
+  function initHalftoneField() {
+    const canvas = document.getElementById('halftone-canvas');
+    if (!canvas) return;
+
+    const wrap = canvas.parentElement;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let prefersReducedMotion = motionQuery.matches;
+
+    motionQuery.addEventListener('change', (e) => {
+      prefersReducedMotion = e.matches;
+      if (prefersReducedMotion) {
+        resetDots();
+        render();
+      } else {
+        startAnimation();
+      }
+    });
+
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+    let whiteDots = [];
+    let redDots = [];
+    let allDots = [];
+    let isVisible = true;
+    let animationFrameId = null;
+
+    const mouse = { x: -9999, y: -9999, active: false };
+    const targetMouse = { x: -9999, y: -9999, active: false };
+
+    const CONFIG = {
+      spacing: 24,           // Crisp editorial spacing across full viewport
+      baseRadius: 1.35,      // Small, refined screentone dots
+      maxDisplacement: 18,   // Subtle movement within 15-20px
+      influenceRadius: 140,  // Cursor interaction zone
+      spring: 0.075,         // Organic spring rate
+      damping: 0.82,         // Smooth easing without bounce
+      whiteColor: 'rgba(240, 242, 246, 0.24)',
+      redColor: 'rgba(165, 24, 36, 0.32)'
+    };
+
+    function createGrid() {
+      whiteDots = [];
+      redDots = [];
+      allDots = [];
+
+      const spacing = CONFIG.spacing;
+      const rowHeight = spacing * 0.866; // isometric hexagonal lattice
+
+      // Extend slightly beyond bounds so dots bleed naturally past viewport edges before fading
+      const extraPad = 24;
+      const cols = Math.ceil((width + extraPad * 2) / spacing) + 2;
+      const rows = Math.ceil((height + extraPad * 2) / rowHeight) + 2;
+
+      const startX = -extraPad + (width + extraPad * 2 - (cols - 1) * spacing) / 2;
+      const startY = -extraPad + (height + extraPad * 2 - (rows - 1) * rowHeight) / 2;
+
+      for (let r = 0; r < rows; r++) {
+        const isOffset = (r % 2 === 1);
+        const y = startY + r * rowHeight;
+
+        for (let c = 0; c < cols; c++) {
+          const x = startX + c * spacing + (isOffset ? spacing * 0.5 : 0);
+
+          // Editorial accent rhythm: ~20% dark red dots, ~80% white dots
+          const isRed = (c * 7 + r * 11) % 5 === 0;
+
+          const dot = {
+            ox: x,
+            oy: y,
+            x: x,
+            y: y,
+            dx: 0,
+            dy: 0,
+            vx: 0,
+            vy: 0,
+            targetDx: 0,
+            targetDy: 0,
+            baseRadius: CONFIG.baseRadius,
+            scale: 1,
+            targetScale: 1,
+            isRed: isRed,
+            active: false
+          };
+
+          allDots.push(dot);
+          if (isRed) {
+            redDots.push(dot);
+          } else {
+            whiteDots.push(dot);
+          }
+        }
+      }
+    }
+
+    function resize() {
+      const rect = wrap.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = rect.width;
+      height = rect.height;
+
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+
+      createGrid();
+
+      if (prefersReducedMotion) {
+        render();
+      }
+    }
+
+    function resetDots() {
+      for (let i = 0; i < allDots.length; i++) {
+        const d = allDots[i];
+        d.dx = 0;
+        d.dy = 0;
+        d.vx = 0;
+        d.vy = 0;
+        d.targetDx = 0;
+        d.targetDy = 0;
+        d.scale = 1;
+        d.targetScale = 1;
+        d.x = d.ox;
+        d.y = d.oy;
+        d.active = false;
+      }
+    }
+
+    // Full-screen hero pointer tracking
+    function updatePointer(clientX, clientY, active) {
+      if (!active) {
+        targetMouse.active = false;
+        return;
+      }
+      const rect = canvas.getBoundingClientRect();
+      // Track anywhere within the hero viewport
+      if (
+        clientX >= rect.left &&
+        clientX <= rect.right &&
+        clientY >= rect.top &&
+        clientY <= rect.bottom
+      ) {
+        targetMouse.x = clientX - rect.left;
+        targetMouse.y = clientY - rect.top;
+        if (!targetMouse.active) {
+          mouse.x = targetMouse.x;
+          mouse.y = targetMouse.y;
+        }
+        targetMouse.active = true;
+      } else {
+        targetMouse.active = false;
+      }
+    }
+
+    window.addEventListener('mousemove', (e) => {
+      updatePointer(e.clientX, e.clientY, true);
+    }, { passive: true });
+
+    window.addEventListener('mouseleave', () => {
+      updatePointer(0, 0, false);
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+      if (e.touches.length > 0) {
+        updatePointer(e.touches[0].clientX, e.touches[0].clientY, true);
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchend', () => {
+      updatePointer(0, 0, false);
+    }, { passive: true });
+
+    window.addEventListener('resize', resize, { passive: true });
+    resize();
+
+    // IntersectionObserver to pause loop when scrolled out of view
+    const heroSection = document.querySelector('.hero');
+    if (heroSection && 'IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        isVisible = entries[0].isIntersecting;
+        if (isVisible && !prefersReducedMotion && !animationFrameId) {
+          startAnimation();
+        }
+      }, { threshold: 0.05 });
+      observer.observe(heroSection);
+    }
+
+    function updatePhysics() {
+      if (targetMouse.active) {
+        mouse.x += (targetMouse.x - mouse.x) * 0.22;
+        mouse.y += (targetMouse.y - mouse.y) * 0.22;
+        mouse.active = true;
+      } else {
+        mouse.active = false;
+      }
+
+      const maxDisp = CONFIG.maxDisplacement;
+      const rInfl = CONFIG.influenceRadius;
+      const rInflSq = rInfl * rInfl;
+
+      for (let i = 0; i < allDots.length; i++) {
+        const d = allDots[i];
+
+        if (mouse.active) {
+          const dx = d.ox - mouse.x;
+          const dy = d.oy - mouse.y;
+          const distSq = dx * dx + dy * dy;
+
+          if (distSq < rInflSq && distSq > 0.001) {
+            const dist = Math.sqrt(distSq);
+            const t = 1 - (dist / rInfl);
+            // Smoothstep curve for calm, organic editorial movement
+            const force = t * t * (3 - 2 * t);
+            const angle = Math.atan2(dy, dx);
+
+            d.targetDx = Math.cos(angle) * force * maxDisp;
+            d.targetDy = Math.sin(angle) * force * maxDisp;
+            d.targetScale = 1.0 + force * 0.55;
+            d.active = true;
+          } else {
+            d.targetDx = 0;
+            d.targetDy = 0;
+            d.targetScale = 1.0;
+          }
+        } else {
+          d.targetDx = 0;
+          d.targetDy = 0;
+          d.targetScale = 1.0;
+        }
+
+        // Fast bail-out for resting dots
+        if (!d.active && d.targetDx === 0) continue;
+
+        // Spring-damper physics for natural elastic return
+        const ax = (d.targetDx - d.dx) * CONFIG.spring;
+        const ay = (d.targetDy - d.dy) * CONFIG.spring;
+
+        d.vx = (d.vx + ax) * CONFIG.damping;
+        d.vy = (d.vy + ay) * CONFIG.damping;
+
+        d.dx += d.vx;
+        d.dy += d.vy;
+
+        d.scale += (d.targetScale - d.scale) * 0.10;
+
+        // Settle near-zero values to eliminate idle jitter
+        if (d.targetDx === 0 && Math.abs(d.dx) < 0.015 && Math.abs(d.vx) < 0.001) {
+          d.dx = 0;
+          d.vx = 0;
+        }
+        if (d.targetDy === 0 && Math.abs(d.dy) < 0.015 && Math.abs(d.vy) < 0.001) {
+          d.dy = 0;
+          d.vy = 0;
+        }
+        if (d.targetScale === 1.0 && Math.abs(d.scale - 1.0) < 0.005) {
+          d.scale = 1.0;
+        }
+
+        d.x = d.ox + d.dx;
+        d.y = d.oy + d.dy;
+
+        if (d.targetDx === 0 && d.dx === 0 && d.vx === 0 && d.dy === 0 && d.vy === 0 && d.scale === 1.0) {
+          d.active = false;
+        }
+      }
+    }
+
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.save();
+      ctx.scale(dpr, dpr);
+
+      // 1. Draw white dots in a single batch
+      ctx.beginPath();
+      for (let i = 0; i < whiteDots.length; i++) {
+        const d = whiteDots[i];
+        const r = d.baseRadius * d.scale;
+        ctx.moveTo(d.x + r, d.y);
+        ctx.arc(d.x, d.y, r, 0, Math.PI * 2);
+      }
+      ctx.fillStyle = CONFIG.whiteColor;
+      ctx.fill();
+
+      // 2. Draw dark red dots in a single batch
+      ctx.beginPath();
+      for (let i = 0; i < redDots.length; i++) {
+        const d = redDots[i];
+        const r = d.baseRadius * d.scale;
+        ctx.moveTo(d.x + r, d.y);
+        ctx.arc(d.x, d.y, r, 0, Math.PI * 2);
+      }
+      ctx.fillStyle = CONFIG.redColor;
+      ctx.fill();
+
+      // 3. Subtle cursor proximity highlight over active dots
+      let hasActive = false;
+      for (let i = 0; i < allDots.length; i++) {
+        if (allDots[i].active && allDots[i].scale > 1.06) {
+          hasActive = true;
+          break;
+        }
+      }
+      if (hasActive) {
+        ctx.beginPath();
+        for (let i = 0; i < allDots.length; i++) {
+          const d = allDots[i];
+          if (d.active && d.scale > 1.06) {
+            const r = d.baseRadius * d.scale;
+            ctx.moveTo(d.x + r, d.y);
+            ctx.arc(d.x, d.y, r, 0, Math.PI * 2);
+          }
+        }
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.16)';
+        ctx.fill();
+      }
+
+      // 4. Full-screen elliptical radial opacity mask:
+      // Fades smoothly toward the outer edges so the pattern blends seamlessly into the dark background
+      const centerX = width * 0.5;
+      const centerY = height * 0.5;
+      const maskRadius = width * 0.58;
+
+      ctx.save();
+      ctx.translate(centerX, centerY);
+      ctx.scale(1, height / width); // Match hero viewport aspect ratio
+
+      const radialMask = ctx.createRadialGradient(0, 0, 0, 0, 0, maskRadius);
+      radialMask.addColorStop(0, 'rgba(0, 0, 0, 1)');
+      radialMask.addColorStop(0.48, 'rgba(0, 0, 0, 0.96)');
+      radialMask.addColorStop(0.72, 'rgba(0, 0, 0, 0.65)');
+      radialMask.addColorStop(0.88, 'rgba(0, 0, 0, 0.22)');
+      radialMask.addColorStop(1.0, 'rgba(0, 0, 0, 0)');
+
+      ctx.globalCompositeOperation = 'destination-in';
+      ctx.fillStyle = radialMask;
+      ctx.beginPath();
+      ctx.arc(0, 0, maskRadius, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+      ctx.restore();
+    }
+
+    function animate() {
+      if (!isVisible) {
+        animationFrameId = null;
+        return;
+      }
+
+      if (prefersReducedMotion) {
+        render();
+        animationFrameId = null;
+        return;
+      }
+
+      updatePhysics();
+      render();
+      animationFrameId = requestAnimationFrame(animate);
+    }
+
+    function startAnimation() {
+      if (!animationFrameId) {
+        animationFrameId = requestAnimationFrame(animate);
+      }
+    }
+
+    startAnimation();
+  }
 });
