@@ -54,7 +54,6 @@ const state = {
 };
 
 let toastTimer = null;
-let openRandomSignal = () => {};
 
 /* ══════════════════════════════════════════════════════
    Boot
@@ -79,7 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initSpotlight();
   initArchive();
   initFooterLinks();
-  initBackToTop();
 
   window.addEventListener('load', () => ScrollTrigger.refresh());
 });
@@ -1011,7 +1009,8 @@ function initSpotlight() {
         scale: 1,
         opacity: 1,
         duration: 0.65,
-        ease: 'expo.out'
+        ease: 'expo.out',
+        overwrite: true
       });
       gsap.fromTo($$('.spotlight-content > *', spotlight), { y: 16, opacity: 0 }, {
         y: 0,
@@ -1106,10 +1105,6 @@ function initFooterLinks() {
   $('#back-top')?.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
   });
-}
-
-function initBackToTop() {
-  /* Reserved for future footer behaviour. */
 }
 
 function showToast(message) {
