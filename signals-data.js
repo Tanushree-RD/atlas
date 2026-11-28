@@ -341,6 +341,43 @@ export const SIGNALS = [
     ],
     metadata: { category: 'Writing', score: 90, difficulty: 'Beginner', time: '10 min' },
     capture: 'SIGNAL CAPTURE // 2024'
+  },
+  {
+    id: 'SIG-010',
+    name: 'StagePeek',
+    tagline: 'Preview real 3D stage sightlines from stadium and arena seats before buying concert tickets.',
+    description: 'Interactive 2D seat maps and 3D WebGL stage sightline simulator across 201+ concert venues.',
+    largerDescription: 'StagePeek combines venue seating charts with an interactive 3D Three.js stage perspective simulator covering 201+ stadiums and concert venues worldwide. Explore real sightlines, field-of-view angles, and 1x-10x zoom directly in the browser before choosing your concert seats.',
+    whyVisit: [
+      'Explore 201+ global concert venues with interactive 2D seat maps and 3D stage views',
+      'Preview seat-by-seat sightlines and 1x-10x zoom before buying tickets',
+      'Free first-seat preview with no signup required across English, Japanese, Korean, and Chinese'
+    ],
+    screenshot: 'assets/stagepeek-preview.jpg',
+    url: 'https://stagepeek.live',
+    creator: 'Hinstein',
+    year: 2026,
+    status: 'Active',
+    category: 'Interactive',
+    filterCategories: ['interactive', 'tool'],
+    tech: 'Three.js, WebGL, HTML5',
+    tags: ['3d', 'webgl', 'concerts', 'interactive', 'venues', 'visualization'],
+    editorsPick: false,
+    fullDescription: 'StagePeek brings interactive 3D sightline simulation to live-music fans and venue explorers. Pick a stadium or arena from 201+ global venues, click any section or seat, and preview the simulated stage angle and zoom directly in your browser without creating an account.',
+    why: 'Choosing concert tickets usually means guessing from flat 2D charts. StagePeek turns venue seating maps into an interactive 3D spatial exploration tool in the browser.',
+    bestFor: [
+      'Live-music fans comparing stadium and arena seat sightlines',
+      'WebGL and Three.js interactive map enthusiasts',
+      'Curated internet explorers who enjoy practical visual web tools'
+    ],
+    notableFeatures: [
+      { title: '201+ Global Venues', desc: 'coverage across stadiums, arenas, and amphitheaters worldwide' },
+      { title: '3D Stage Perspective', desc: 'interactive Three.js camera angle and 1x-10x zoom per seat' },
+      { title: '2D + 3D Sync', desc: 'click any section on the 2D seating chart to jump straight into the 3D view' },
+      { title: 'Instant Browser Preview', desc: 'first seat preview free without signup; Pro plans optional for expanded views' }
+    ],
+    metadata: { category: 'Interactive', score: 91, difficulty: 'Beginner', time: '5 min' },
+    capture: 'SIGNAL CAPTURE // 2026'
   }
 ];
 
